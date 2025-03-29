@@ -1,0 +1,162 @@
+
+import { useState, useEffect, useRef } from "react";
+import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { NewsArticle } from "@/data/newsData";
+import { useSwipeable } from 'react-swipeable';
+
+interface NewsReelProps {
+  article: NewsArticle;
+  onLike: (id: number) => void;
+  onComment: (id: number) => void;
+  onShare: (id: number) => void;
+  onSave: (id: number) => void;
+  onSwipeLeft: (article: NewsArticle) => void;
+  onSwipeRight: () => void;
+  currentIndex: number;
+  totalArticles: number;
+}
+
+const NewsReel = ({
+  article,
+  onLike,
+  onComment,
+  onShare,
+  onSave,
+  onSwipeLeft,
+  onSwipeRight,
+  currentIndex,
+  totalArticles
+}: NewsReelProps) => {
+  const [progress, setProgress] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  const progressInterval = useRef<number | null>(null);
+  
+  const handlers = useSwipeable({
+    onSwipedLeft: () => onSwipeLeft(article),
+    onSwipedRight: () => onSwipeRight(),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
+
+  useEffect(() => {
+    // Reset progress and summary on article change
+    setProgress(0);
+    setShowSummary(false);
+    
+    // Start progress
+    const startTime = Date.now();
+    const duration = 10000; // 10 seconds per reel
+    
+    progressInterval.current = window.setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min((elapsed / duration) * 100, 100);
+      setProgress(newProgress);
+      
+      if (elapsed > 500 && !showSummary) {
+        setShowSummary(true);
+      }
+      
+      if (newProgress >= 100) {
+        clearInterval(progressInterval.current!);
+      }
+    }, 100);
+    
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+      }
+    };
+  }, [article.id]);
+
+  return (
+    <div className="news-reel" {...handlers}>
+      <img
+        src={article.imageUrl}
+        alt={article.title}
+        className="news-reel-image"
+      />
+      <div className="news-reel-overlay" />
+      
+      <div className="swipe-indicator swipe-left">
+        <ChevronLeft size={24} />
+      </div>
+      
+      <div className="swipe-indicator swipe-right">
+        <ChevronRight size={24} />
+      </div>
+      
+      <div className="news-reel-content px-4 md:px-8">
+        <div className="mb-4">
+          <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 inline-block mb-2">
+            {article.category}
+          </div>
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-3">
+            {article.title}
+          </h1>
+          <div
+            className={cn(
+              "text-white/90 text-base md:text-lg transition-opacity duration-500",
+              showSummary ? "opacity-100" : "opacity-0"
+            )}
+          >
+            {article.summary}
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-center mb-16">
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:text-primary hover:bg-white/10"
+              onClick={() => onLike(article.id)}
+            >
+              <Heart size={24} className={article.saved ? "fill-primary text-primary" : ""} />
+            </Button>
+            <span className="text-white">{article.likes}</span>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:text-primary hover:bg-white/10"
+              onClick={() => onComment(article.id)}
+            >
+              <MessageSquare size={24} />
+            </Button>
+            <span className="text-white">{article.comments}</span>
+          </div>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:text-primary hover:bg-white/10"
+            onClick={() => onShare(article.id)}
+          >
+            <Share2 size={24} />
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon" 
+            className="text-white hover:text-primary hover:bg-white/10"
+            onClick={() => onSave(article.id)}
+          >
+            <Bookmark size={24} className={article.saved ? "fill-primary text-primary" : ""} />
+          </Button>
+        </div>
+        
+        <div className="absolute bottom-4 left-4 text-white/70 text-xs">
+          By {article.author} • {article.date} • {currentIndex + 1}/{totalArticles}
+        </div>
+      </div>
+      
+      <div className="progress-bar" style={{ width: `${progress}%` }} />
+    </div>
+  );
+};
+
+export default NewsReel;
