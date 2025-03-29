@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,7 @@ const NewsReel = ({
   const handlers = useSwipeable({
     onSwipedLeft: () => onSwipeLeft(article),
     onSwipedRight: () => onSwipeRight(),
-    preventDefaultTouchmoveEvent: true,
+    preventScrollOnSwipe: true,
     trackMouse: true
   });
 
