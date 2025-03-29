@@ -10,6 +10,7 @@ interface NewsCardProps {
   onComment?: (id: number) => void;
   onSave?: (id: number) => void;
   onClick?: (article: NewsArticle) => void;
+  showMetrics?: boolean;
 }
 
 const NewsCard = ({
@@ -18,7 +19,8 @@ const NewsCard = ({
   onLike,
   onComment,
   onSave,
-  onClick
+  onClick,
+  showMetrics = false
 }: NewsCardProps) => {
   const handleClick = () => {
     if (onClick) onClick(article);
@@ -27,10 +29,10 @@ const NewsCard = ({
   return (
     <div
       className={cn(
-        "group bg-card rounded-lg shadow-sm overflow-hidden border border-border hover:shadow-md transition-shadow cursor-pointer",
+        "group bg-card rounded-lg shadow-sm overflow-hidden border border-border hover:shadow-md transition-all duration-300 cursor-pointer",
         {
           "h-64": size === "large",
-          "h-48": size === "medium",
+          "h-60": size === "medium",
           "h-36": size === "small"
         }
       )}
@@ -50,7 +52,7 @@ const NewsCard = ({
           <img
             src={article.imageUrl}
             alt={article.title}
-            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
           />
           <div className="absolute top-2 left-2">
             <span className="text-xs font-medium bg-primary/90 text-white rounded-full px-2 py-0.5">
@@ -91,9 +93,10 @@ const NewsCard = ({
                     e.stopPropagation();
                     onLike(article.id);
                   }}
-                  className="text-muted-foreground hover:text-primary"
+                  className="text-muted-foreground hover:text-primary flex items-center"
                 >
-                  <Heart size={14} className={article.saved ? "fill-primary text-primary" : ""} />
+                  <Heart size={14} className={article.liked ? "fill-primary text-primary" : ""} />
+                  {showMetrics && <span className="ml-1">{article.likes}</span>}
                 </button>
               )}
               
@@ -103,9 +106,10 @@ const NewsCard = ({
                     e.stopPropagation();
                     onComment(article.id);
                   }}
-                  className="text-muted-foreground hover:text-primary"
+                  className="text-muted-foreground hover:text-primary flex items-center"
                 >
                   <MessageSquare size={14} />
+                  {showMetrics && <span className="ml-1">22</span>}
                 </button>
               )}
               

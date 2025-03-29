@@ -16,23 +16,41 @@ const Index = () => {
   const [showArticle, setShowArticle] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const reelsRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle wheel scrolling for desktop
+  // Handle wheel scrolling for desktop with improved smooth animation
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > 5) {
-        if (e.deltaY > 0) {
-          if (currentIndex < articles.length - 1) {
-            setCurrentIndex(prev => prev + 1);
-          }
-        } else {
-          if (currentIndex > 0) {
-            setCurrentIndex(prev => prev - 1);
-          }
+      e.preventDefault();
+      
+      if (isScrolling) return;
+      
+      const delta = Math.abs(e.deltaY);
+      if (delta < 10) return; // Ignore small scrolls for better user experience
+      
+      setIsScrolling(true);
+      
+      if (e.deltaY > 0) {
+        if (currentIndex < articles.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        }
+      } else {
+        if (currentIndex > 0) {
+          setCurrentIndex(prev => prev - 1);
         }
       }
+      
+      // Add a delay before allowing another scroll
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 800); // Longer timeout for smoother scrolling experience
     };
 
     const container = containerRef.current;
@@ -44,15 +62,21 @@ const Index = () => {
       if (container) {
         container.removeEventListener('wheel', handleWheel);
       }
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
-  }, [currentIndex, articles.length]);
+  }, [currentIndex, articles.length, isScrolling]);
 
-  // Scroll to current reel when index changes
+  // Smooth scroll to current reel when index changes
   useEffect(() => {
     if (reelsRef.current) {
       const targetReel = reelsRef.current.children[currentIndex] as HTMLElement;
       if (targetReel) {
-        targetReel.scrollIntoView({ behavior: 'smooth' });
+        targetReel.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start' 
+        });
       }
     }
   }, [currentIndex]);
@@ -61,7 +85,7 @@ const Index = () => {
     setArticles((prevArticles) =>
       prevArticles.map((article) =>
         article.id === id
-          ? { ...article, likes: article.likes + 1, liked: !article.liked }
+          ? { ...article, likes: article.liked ? article.likes - 1 : article.likes + 1, liked: !article.liked }
           : article
       )
     );
@@ -80,8 +104,6 @@ const Index = () => {
       title: "Comments",
       description: "Comments section would open here",
     });
-    
-    // In a real app, you would open comments UI here
   }, [toast]);
 
   const handleShare = useCallback((id: number) => {
@@ -89,8 +111,6 @@ const Index = () => {
       title: "Share",
       description: "Share options would appear here",
     });
-    
-    // In a real app, you would show share options here
   }, [toast]);
 
   const handleSave = useCallback((id: number) => {
@@ -140,6 +160,69 @@ const Index = () => {
     }
   }, [currentIndex]);
 
+  // Handle touch events for mobile swipe with smoother animation
+  useEffect(() => {
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isScrolling) {
+        e.preventDefault();
+        return;
+      }
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndY = e.changedTouches[0].clientY;
+      
+      const deltaY = touchStartY - touchEndY;
+      
+      if (Math.abs(deltaY) < 50) return; // Require more significant swipe
+      
+      setIsScrolling(true);
+      
+      if (deltaY > 0) {
+        // Swipe Up - go to next
+        if (currentIndex < articles.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        }
+      } else {
+        // Swipe Down - go to previous
+        if (currentIndex > 0) {
+          setCurrentIndex(prev => prev - 1);
+        }
+      }
+      
+      // Add a delay before allowing another swipe
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 800);
+    };
+    
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('touchstart', handleTouchStart);
+      container.addEventListener('touchmove', handleTouchMove, { passive: false });
+      container.addEventListener('touchend', handleTouchEnd);
+    }
+    
+    return () => {
+      if (container) {
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchmove', handleTouchMove);
+        container.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [currentIndex, articles.length, isScrolling]);
+
   // Get related articles for the current selected article
   const relatedArticles = selectedArticle
     ? articles
@@ -159,7 +242,14 @@ const Index = () => {
       <div className="h-full w-full pt-16 pb-16" ref={reelsRef}>
         <div className="h-full snap-y snap-mandatory overflow-y-auto scrollbar-hide">
           {articles.map((article, index) => (
-            <div key={article.id} className={`h-full w-full snap-start ${index === currentIndex ? 'block' : 'hidden md:block'}`}>
+            <div 
+              key={article.id} 
+              className={`h-full w-full snap-start ${index === currentIndex ? 'block' : 'hidden md:block'}`}
+              style={{
+                transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)',
+                transform: `translateY(${(index - currentIndex) * 100}%)`
+              }}
+            >
               <NewsReel
                 article={article}
                 onLike={handleLike}

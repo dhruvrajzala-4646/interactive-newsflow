@@ -32,7 +32,7 @@ const FullArticle = ({
   return (
     <div 
       className={cn(
-        "fixed top-0 left-0 w-full h-full bg-background z-50 overflow-hidden transition-transform duration-300 ease-in-out",
+        "fixed inset-0 bg-background z-50 overflow-hidden transition-transform duration-300 ease-out",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
@@ -48,6 +48,7 @@ const FullArticle = ({
               size="icon"
               onClick={() => article && onLike(article.id)}
               className="hover:bg-background/20"
+              aria-label="Like"
             >
               <Heart size={20} className={article.liked ? "fill-primary text-primary" : ""} />
             </Button>
@@ -57,6 +58,7 @@ const FullArticle = ({
               size="icon"
               onClick={() => article && onComment(article.id)}
               className="hover:bg-background/20"
+              aria-label="Comment"
             >
               <MessageSquare size={20} />
             </Button>
@@ -66,6 +68,7 @@ const FullArticle = ({
               size="icon"
               onClick={() => article && onShare(article.id)}
               className="hover:bg-background/20"
+              aria-label="Share"
             >
               <Share2 size={20} />
             </Button>
@@ -75,6 +78,7 @@ const FullArticle = ({
               size="icon"
               onClick={() => article && onSave(article.id)}
               className="hover:bg-background/20"
+              aria-label="Save"
             >
               <Bookmark size={20} className={article.saved ? "fill-primary text-primary" : ""} />
             </Button>
@@ -84,7 +88,7 @@ const FullArticle = ({
       
       <ScrollArea className="h-[calc(100vh-60px)]">
         <div className="container mx-auto max-w-4xl p-4 md:p-6 animate-fade-in">
-          <div className="mb-6 text-center">
+          <div className="mb-6 text-center animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
             <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 inline-block mb-2">
               {article.category}
             </div>
@@ -92,11 +96,11 @@ const FullArticle = ({
               {article.title}
             </h1>
             <div className="text-muted-foreground text-sm mb-6">
-              By {article.author} • {article.date}
+              By {article.author} • {article.date} • {article.likes} likes
             </div>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 animate-scale-in" style={{ animationDelay: '0.2s' }}>
             <img 
               src={article.imageUrl}
               alt={article.title}
@@ -104,23 +108,25 @@ const FullArticle = ({
             />
           </div>
           
-          <div className="text-lg font-medium mb-8 text-center border-l-4 border-primary pl-4 py-2 bg-muted/20">
+          <div className="text-lg font-medium mb-8 text-center border-l-4 border-primary pl-4 py-2 bg-muted/20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             {article.summary}
           </div>
           
           <div 
-            className="prose prose-lg dark:prose-invert max-w-none mb-12 space-y-6"
+            className="prose prose-lg dark:prose-invert max-w-none mb-12 space-y-6 animate-fade-in"
+            style={{ animationDelay: '0.4s' }}
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
           
           {relatedArticles.length > 0 && (
-            <div className="mt-10 border-t border-border pt-8">
+            <div className="mt-10 border-t border-border pt-8 animate-fade-in" style={{ animationDelay: '0.5s' }}>
               <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
-              <div className="flex overflow-x-auto pb-6 gap-4 snap-x">
-                {relatedArticles.map((related) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                {relatedArticles.map((related, index) => (
                   <div 
                     key={related.id}
-                    className="flex-shrink-0 w-[280px] border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 snap-start"
+                    className="border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 card-hover animate-fade-in cursor-pointer"
+                    style={{ animationDelay: `${0.6 + index * 0.1}s` }}
                   >
                     <img 
                       src={related.imageUrl}
@@ -137,8 +143,13 @@ const FullArticle = ({
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                         {related.summary}
                       </p>
-                      <div className="text-xs text-muted-foreground">
-                        {related.date}
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">
+                          {related.date}
+                        </span>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Heart size={12} /> {related.likes}
+                        </span>
                       </div>
                     </div>
                   </div>

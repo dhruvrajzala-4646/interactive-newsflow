@@ -7,6 +7,7 @@ import BottomNav from "@/components/navigation/BottomNav";
 import NewsTicker from "@/components/news/NewsTicker";
 import NewsCard from "@/components/news/NewsCard";
 import FullArticle from "@/components/news/FullArticle";
+import { Heart, MessageSquare, Bookmark } from "lucide-react";
 
 const Trending = () => {
   const { toast } = useToast();
@@ -16,12 +17,22 @@ const Trending = () => {
   
   const featuredArticles = articles.filter(article => article.featured);
   const trendingArticles = articles.filter(article => article.trending && !article.featured);
+  
+  // Create a new section for latest blogs - we'll take the 3 most recent articles
+  const latestBlogs = [...articles].sort((a, b) => {
+    const dateA = new Date(a.date.split(" ")[0]);
+    const dateB = new Date(b.date.split(" ")[0]);
+    return dateB.getTime() - dateA.getTime();
+  }).slice(0, 3);
+  
+  // Create a new section for most liked blogs
+  const mostLikedBlogs = [...articles].sort((a, b) => b.likes - a.likes).slice(0, 3);
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
       prevArticles.map((article) =>
         article.id === id
-          ? { ...article, likes: article.likes + 1, liked: !article.liked }
+          ? { ...article, likes: article.liked ? article.likes - 1 : article.likes + 1, liked: !article.liked }
           : article
       )
     );
@@ -107,7 +118,7 @@ const Trending = () => {
             {featuredArticles.map((article, index) => (
               <div key={article.id} className={index === 0 ? "lg:col-span-2" : ""}>
                 <div 
-                  className={`relative overflow-hidden rounded-lg shadow-md cursor-pointer group ${
+                  className={`relative overflow-hidden rounded-lg shadow-md cursor-pointer group hover:shadow-lg transition-all duration-300 ${
                     index === 0 ? "h-80" : "h-64"
                   }`}
                   onClick={() => handleArticleClick(article)}
@@ -135,12 +146,14 @@ const Trending = () => {
                           className="text-white/90 hover:text-primary"
                         >
                           <Heart size={20} className={article.liked ? "fill-primary text-primary" : ""} />
+                          <span className="ml-1 text-xs">{article.likes}</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleComment(article.id); }}
                           className="text-white/90 hover:text-primary"
                         >
                           <MessageSquare size={20} />
+                          <span className="ml-1 text-xs">22</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleSave(article.id); }}
@@ -158,12 +171,12 @@ const Trending = () => {
         </div>
         
         {/* Trending Topics Section */}
-        <div className="mb-6">
+        <div className="mb-10">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Trending Topics</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trendingArticles.map((article) => (
-              <div key={article.id} className="animate-fade-in" style={{animationDelay: `${trendingArticles.indexOf(article) * 0.1}s`}}>
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${trendingArticles.indexOf(article) * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
@@ -171,6 +184,49 @@ const Trending = () => {
                   onComment={handleComment}
                   onSave={handleSave}
                   onClick={handleArticleClick}
+                  showMetrics={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Most Liked Blogs Section */}
+        <div className="mb-10">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Most Liked Blogs</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {mostLikedBlogs.map((article) => (
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${mostLikedBlogs.indexOf(article) * 0.1}s`}}>
+                <NewsCard
+                  article={article}
+                  size="medium"
+                  onLike={handleLike}
+                  onComment={handleComment}
+                  onSave={handleSave}
+                  onClick={handleArticleClick}
+                  showMetrics={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Latest Blogs Section */}
+        <div className="mb-10">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Latest Blogs</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {latestBlogs.map((article) => (
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${latestBlogs.indexOf(article) * 0.1}s`}}>
+                <NewsCard
+                  article={article}
+                  size="medium"
+                  onLike={handleLike}
+                  onComment={handleComment}
+                  onSave={handleSave}
+                  onClick={handleArticleClick}
+                  showMetrics={true}
                 />
               </div>
             ))}
@@ -196,6 +252,3 @@ const Trending = () => {
 };
 
 export default Trending;
-
-// Add Heart, MessageSquare, and Bookmark imports at the top
-import { Heart, MessageSquare, Bookmark } from "lucide-react";

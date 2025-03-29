@@ -56,6 +56,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -80,8 +82,38 @@
   }
 }
 
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
 }
 
 /* News reel specific styling */
@@ -96,6 +128,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.8s ease-out;
 }
 
 .news-reel-overlay {
@@ -112,6 +145,8 @@
   padding: 1.5rem;
   color: white;
   z-index: 10;
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .progress-bar {
@@ -138,6 +173,12 @@
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+
+.swipe-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .swipe-left {
@@ -158,7 +199,7 @@
   background-color: hsl(var(--background));
   z-index: 50;
   overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* AI Assistant slide animations */
@@ -172,7 +213,7 @@
   background-color: hsl(var(--background));
   z-index: 50;
   overflow: hidden;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -237,9 +278,28 @@
 
 /* Hover effects */
 .hover-scale {
-  transition: transform 0.2s ease-out;
+  transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .hover-scale:hover {
   transform: scale(1.03);
+}
+
+/* Reel Animation Enhancement */
+.reel-container {
+  transition: transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.reel-item {
+  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Card animation enhancements */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }

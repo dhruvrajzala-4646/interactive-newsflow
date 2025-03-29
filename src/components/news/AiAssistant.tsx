@@ -68,10 +68,11 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
     }
   }, [currentArticle?.id]);
 
+  // Fixed styling for the AI assistant to appear as a full page overlay
   return (
     <div 
       className={cn(
-        "fixed top-0 right-0 w-full md:w-[400px] h-full bg-background z-50 shadow-lg transition-transform duration-300 ease-in-out",
+        "fixed inset-0 bg-background z-50 transform transition-transform duration-300 ease-in-out",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
