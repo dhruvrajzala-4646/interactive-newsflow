@@ -11,6 +11,7 @@ export interface NewsArticle {
   likes: number;
   comments: number;
   saved: boolean;
+  liked: boolean;
   trending: boolean;
   featured: boolean;
 }
@@ -29,13 +30,14 @@ export const newsData: NewsArticle[] = [
     <p>Climate activists have cautiously welcomed the agreement, though many emphasize that implementation will be the true test. "The targets are ambitious, which is what science demands," said Greta Thunberg. "But now we need to see action, not just promises."</p>
     
     <p>Markets reacted positively to the news, with renewable energy stocks surging and fossil fuel companies seeing significant drops in share prices. Analysts predict this agreement will accelerate the already rapid growth in green technology investment.</p>`,
-    imageUrl: "https://source.unsplash.com/random/?climate",
+    imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3",
     category: "Environment",
     author: "Sarah Johnson",
     date: "2023-11-15",
     likes: 1543,
     comments: 284,
     saved: false,
+    liked: false,
     trending: true,
     featured: true
   },
@@ -52,13 +54,14 @@ export const newsData: NewsArticle[] = [
     <p>Understanding protein structures is crucial for drug development and biological research, as a protein's shape determines its function. Traditionally, determining these structures required months or years of laboratory work.</p>
     
     <p>DeepMind has announced it will make AlphaFold 3 available to the scientific community, potentially accelerating research across multiple fields. Several pharmaceutical companies have already announced plans to incorporate the technology into their drug discovery pipelines.</p>`,
-    imageUrl: "https://source.unsplash.com/random/?technology",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3",
     category: "Technology",
     author: "Michael Chen",
     date: "2023-11-14",
     likes: 3287,
     comments: 413,
     saved: true,
+    liked: false,
     trending: true,
     featured: false
   },
@@ -75,13 +78,14 @@ export const newsData: NewsArticle[] = [
     <p>The approved ETFs will begin trading next week on the NYSE and Nasdaq, allowing investors to gain exposure to Bitcoin without directly purchasing and storing the digital asset. Analysts predict this could bring a flood of institutional money into the cryptocurrency market.</p>
     
     <p>The decision represents a significant shift in the SEC's stance toward cryptocurrency under new leadership. Previously, the commission had rejected numerous Bitcoin ETF applications, citing concerns about market manipulation and investor protection.</p>`,
-    imageUrl: "https://source.unsplash.com/random/?cryptocurrency",
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3",
     category: "Finance",
     author: "Jason Rodriguez",
     date: "2023-11-13",
     likes: 2186,
     comments: 597,
     saved: false,
+    liked: false,
     trending: true,
     featured: false
   },
@@ -98,13 +102,14 @@ export const newsData: NewsArticle[] = [
     <p>Recent analyses of these plumes have shown the presence of complex organic molecules, raising the tantalizing possibility that Europa might contain the building blocks for life.</p>
     
     <p>The $4.5 billion mission will involve the spacecraft performing approximately 45 close flybys of Europa, coming as close as 16 miles to the moon's surface, while orbiting Jupiter to avoid the gas giant's intense radiation fields which could damage the spacecraft's electronics.</p>`,
-    imageUrl: "https://source.unsplash.com/random/?space",
+    imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3",
     category: "Science",
     author: "Elena Martinez",
     date: "2023-11-12",
     likes: 4285,
     comments: 342,
     saved: true,
+    liked: false,
     trending: false,
     featured: true
   },
@@ -121,15 +126,64 @@ export const newsData: NewsArticle[] = [
     <p>The breakthrough hinges on IBM's new quantum error correction system, which significantly reduces the noise and errors that have plagued quantum computers and limited their practical applications. This improvement in error correction allows the quantum computer to perform longer and more complex calculations with sufficient accuracy for practical use.</p>
     
     <p>Several major pharmaceutical companies have already partnered with IBM to use the new system for drug discovery applications, potentially revolutionizing the development of new medications by dramatically accelerating the process of identifying and testing new molecular compounds.</p>`,
-    imageUrl: "https://source.unsplash.com/random/?quantum",
+    imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3",
     category: "Technology",
     author: "David Kumar",
     date: "2023-11-10",
     likes: 1892,
     comments: 208,
     saved: false,
+    liked: false,
     trending: true,
     featured: false
+  },
+  {
+    id: 6,
+    title: "New Study Reveals Unexpected Benefits of Intermittent Fasting",
+    summary: "Research shows time-restricted eating has profound effects beyond weight loss, including improved cell repair and longevity.",
+    content: `<p>A groundbreaking study published today in the Journal of Metabolic Research has revealed that intermittent fasting provides substantial health benefits beyond weight management, potentially affecting cellular repair mechanisms and longevity.</p>
+    
+    <p>The five-year study, conducted by researchers at Stanford University, tracked over 1,200 participants who followed various time-restricted eating protocols. The most significant results came from those following a 16:8 fasting schedule (16 hours of fasting, 8 hours of eating).</p>
+    
+    <p>"What surprised us most was the extent of cellular regeneration we observed," said Dr. Amelia Takashi, the study's lead author. "Participants showed significantly increased autophagy—the process by which cells clean out damaged components and regenerate themselves."</p>
+    
+    <p>Participants in the 16:8 group showed a 37% increase in autophagy markers compared to control groups, along with reduced inflammation markers, improved insulin sensitivity, and decreased oxidative stress—all factors associated with aging and chronic disease.</p>
+    
+    <p>The study also found cognitive benefits, with fasting participants scoring higher on memory and problem-solving tests, suggesting potential implications for neurodegenerative disease prevention.</p>`,
+    imageUrl: "https://images.unsplash.com/photo-1542848284-8afa78a08ccb?ixlib=rb-4.0.3",
+    category: "Health",
+    author: "James Wong",
+    date: "2023-11-08",
+    likes: 3411,
+    comments: 452,
+    saved: false,
+    liked: false,
+    trending: true,
+    featured: false
+  },
+  {
+    id: 7,
+    title: "Archaeologists Discover 'Lost City' in Amazon Rainforest Using Advanced Lidar Technology",
+    summary: "Hidden urban complex reveals advanced civilization existed in the Amazon 2,000 years ago, challenging previous understanding.",
+    content: `<p>Archaeologists have discovered the remains of a vast urban settlement in a remote region of the Amazon rainforest, using cutting-edge lidar technology that penetrated the dense jungle canopy to reveal what experts are calling "one of the most significant archaeological finds of the century."</p>
+    
+    <p>The discovery, made by an international team led by researchers from the University of São Paulo and the French National Centre for Scientific Research, uncovered a sophisticated network of roads, canals, reservoirs, and plazas spanning over 50 square kilometers.</p>
+    
+    <p>"This completely rewrites our understanding of pre-Columbian Amazon civilizations," said Dr. Carlos Monteiro, the project's lead archaeologist. "The scale and complexity of this site indicate a society far more advanced than previously thought possible in this region."</p>
+    
+    <p>The settlement, estimated to have been built around 200 CE, could have supported a population of up to 100,000 people and includes evidence of advanced agricultural techniques, water management systems, and ceremonial structures aligned with astronomical events.</p>
+    
+    <p>Preliminary analysis of artifacts found at the site suggests extensive trade networks with distant regions, indicating the civilization was far from isolated. The discovery challenges long-held assumptions about the Amazon being a pristine wilderness only sparsely populated before European contact.</p>`,
+    imageUrl: "https://images.unsplash.com/photo-1513956301757-19debdb73d3e?ixlib=rb-4.0.3",
+    category: "Archaeology",
+    author: "Ana Ferreira",
+    date: "2023-11-05",
+    likes: 5126,
+    comments: 324,
+    saved: true,
+    liked: false,
+    trending: false,
+    featured: true
   }
 ];
 

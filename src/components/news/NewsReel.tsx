@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -70,25 +71,25 @@ const NewsReel = ({
   }, [article.id]);
 
   return (
-    <div className="news-reel" {...handlers}>
+    <div className="news-reel h-screen w-full relative snap-center" {...handlers}>
       <img
         src={article.imageUrl}
         alt={article.title}
-        className="news-reel-image"
+        className="w-full h-full object-cover absolute inset-0"
       />
-      <div className="news-reel-overlay" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       
-      <div className="swipe-indicator swipe-left">
-        <ChevronLeft size={24} />
+      <div className="swipe-indicator swipe-left absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 animate-pulse">
+        <ChevronLeft size={24} className="text-white" />
       </div>
       
-      <div className="swipe-indicator swipe-right">
-        <ChevronRight size={24} />
+      <div className="swipe-indicator swipe-right absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 animate-pulse">
+        <ChevronRight size={24} className="text-white" />
       </div>
       
-      <div className="news-reel-content px-4 md:px-8">
-        <div className="mb-4">
-          <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 inline-block mb-2">
+      <div className="news-reel-content absolute inset-0 flex flex-col justify-end px-4 md:px-8 pb-20 z-10">
+        <div className="mb-4 animate-fade-in">
+          <div className="text-sm font-medium text-primary bg-primary/20 backdrop-blur-sm rounded-full px-3 py-1 inline-block mb-2">
             {article.category}
           </div>
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-3">
@@ -97,14 +98,14 @@ const NewsReel = ({
           <div
             className={cn(
               "text-white/90 text-base md:text-lg transition-opacity duration-500",
-              showSummary ? "opacity-100" : "opacity-0"
+              showSummary ? "opacity-100 animate-fade-in" : "opacity-0"
             )}
           >
             {article.summary}
           </div>
         </div>
         
-        <div className="flex justify-between items-center mb-16">
+        <div className="flex justify-between items-center mb-16 animate-fade-in">
           <div className="flex gap-2">
             <Button
               variant="ghost"
@@ -112,7 +113,7 @@ const NewsReel = ({
               className="text-white hover:text-primary hover:bg-white/10"
               onClick={() => onLike(article.id)}
             >
-              <Heart size={24} className={article.saved ? "fill-primary text-primary" : ""} />
+              <Heart size={24} className={article.liked ? "fill-primary text-primary" : ""} />
             </Button>
             <span className="text-white">{article.likes}</span>
           </div>
@@ -153,7 +154,7 @@ const NewsReel = ({
         </div>
       </div>
       
-      <div className="progress-bar" style={{ width: `${progress}%` }} />
+      <div className="progress-bar absolute bottom-0 left-0 h-1 bg-primary z-20" style={{ width: `${progress}%` }} />
     </div>
   );
 };

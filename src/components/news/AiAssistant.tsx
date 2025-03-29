@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NewsArticle } from "@/data/newsData";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AiAssistantProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
       } else if (input.toLowerCase().includes("more") || input.toLowerCase().includes("similar")) {
         response = "I can recommend similar articles on this topic. Would you like me to show you those?";
       } else {
-        response = "I'm a simple assistant UI demonstration without a backend. In a real application, I would provide more detailed and personalized responses. Is there anything else you'd like to know?";
+        response = "I'm a simple assistant UI demonstration. In a real application, I would provide more detailed and personalized responses about the news article you're viewing. Is there anything else you'd like to know?";
       }
       
       setMessages((prev) => [...prev, { text: response, isUser: false }]);
@@ -58,11 +59,20 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Reset messages when article changes
+  useEffect(() => {
+    if (currentArticle) {
+      setMessages([
+        { text: `Hi! I'm your news assistant. Ask me anything about "${currentArticle.title}"`, isUser: false }
+      ]);
+    }
+  }, [currentArticle?.id]);
+
   return (
     <div 
       className={cn(
-        "ai-assistant",
-        isOpen ? "translate-x-0" : "translate-x-full"
+        "fixed top-0 right-0 w-full md:w-[400px] h-full bg-background z-50 shadow-lg transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <div className="flex flex-col h-full">
@@ -74,19 +84,19 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
             <div>
               <h2 className="text-lg font-bold">AI News Assistant</h2>
               <p className="text-xs text-muted-foreground">
-                Ask questions about the current news
+                Ask questions about "{currentArticle?.title.substring(0, 20)}..."
               </p>
             </div>
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4">
+        <ScrollArea className="flex-1 p-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
                 key={index}
                 className={cn(
-                  "flex",
+                  "flex animate-fade-in",
                   message.isUser ? "justify-end" : "justify-start"
                 )}
               >
@@ -104,7 +114,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
             ))}
             <div ref={messagesEndRef} />
           </div>
-        </div>
+        </ScrollArea>
         
         <div className="sticky bottom-0 bg-background p-4 border-t border-border">
           <div className="flex gap-2">
@@ -115,7 +125,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               className="flex-1"
             />
-            <Button onClick={handleSend}>
+            <Button onClick={handleSend} className="bg-primary hover:bg-primary/90">
               <Send size={18} />
             </Button>
           </div>

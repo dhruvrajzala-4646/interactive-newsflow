@@ -1,5 +1,5 @@
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { newsData, NewsArticle } from "@/data/newsData";
 import TopNav from "@/components/navigation/TopNav";
@@ -7,6 +7,7 @@ import BottomNav from "@/components/navigation/BottomNav";
 import NewsReel from "@/components/news/NewsReel";
 import FullArticle from "@/components/news/FullArticle";
 import AiAssistant from "@/components/news/AiAssistant";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Index = () => {
   const { toast } = useToast();
@@ -16,26 +17,71 @@ const Index = () => {
   const [showAssistant, setShowAssistant] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const reelsRef = useRef<HTMLDivElement>(null);
+
+  // Handle wheel scrolling for desktop
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 5) {
+        if (e.deltaY > 0) {
+          if (currentIndex < articles.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+          }
+        } else {
+          if (currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+          }
+        }
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('wheel', handleWheel, { passive: false });
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [currentIndex, articles.length]);
+
+  // Scroll to current reel when index changes
+  useEffect(() => {
+    if (reelsRef.current) {
+      const targetReel = reelsRef.current.children[currentIndex] as HTMLElement;
+      if (targetReel) {
+        targetReel.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [currentIndex]);
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
       prevArticles.map((article) =>
         article.id === id
-          ? { ...article, likes: article.likes + 1 }
+          ? { ...article, likes: article.likes + 1, liked: !article.liked }
           : article
       )
     );
+    
+    const article = articles.find(a => a.id === id);
     toast({
-      title: "Liked!",
-      description: "You've liked this article",
+      title: article?.liked ? "Unliked" : "Liked!",
+      description: article?.liked 
+        ? "You've unliked this article" 
+        : "You've liked this article",
     });
-  }, [toast]);
+  }, [articles, toast]);
 
   const handleComment = useCallback((id: number) => {
     toast({
       title: "Comments",
       description: "Comments section would open here",
     });
+    
+    // In a real app, you would open comments UI here
   }, [toast]);
 
   const handleShare = useCallback((id: number) => {
@@ -43,6 +89,8 @@ const Index = () => {
       title: "Share",
       description: "Share options would appear here",
     });
+    
+    // In a real app, you would show share options here
   }, [toast]);
 
   const handleSave = useCallback((id: number) => {
@@ -108,18 +156,24 @@ const Index = () => {
       <TopNav />
       
       {/* Main Feed */}
-      <div className="h-full w-full">
-        <NewsReel
-          article={articles[currentIndex]}
-          onLike={handleLike}
-          onComment={handleComment}
-          onShare={handleShare}
-          onSave={handleSave}
-          onSwipeLeft={handleSwipeLeft}
-          onSwipeRight={handleSwipeRight}
-          currentIndex={currentIndex}
-          totalArticles={articles.length}
-        />
+      <div className="h-full w-full pt-16 pb-16" ref={reelsRef}>
+        <div className="h-full snap-y snap-mandatory overflow-y-auto scrollbar-hide">
+          {articles.map((article, index) => (
+            <div key={article.id} className={`h-full w-full snap-start ${index === currentIndex ? 'block' : 'hidden md:block'}`}>
+              <NewsReel
+                article={article}
+                onLike={handleLike}
+                onComment={handleComment}
+                onShare={handleShare}
+                onSave={handleSave}
+                onSwipeLeft={handleSwipeLeft}
+                onSwipeRight={handleSwipeRight}
+                currentIndex={index}
+                totalArticles={articles.length}
+              />
+            </div>
+          ))}
+        </div>
       </div>
       
       {/* Fullscreen Article (slide from right) */}
