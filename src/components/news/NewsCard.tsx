@@ -1,5 +1,5 @@
 
-import { Heart, MessageSquare, Bookmark, Headphones, ArrowLeft } from "lucide-react";
+import { Heart, MessageSquare, Bookmark, Headphones } from "lucide-react";
 import { NewsArticle } from "@/data/newsData";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,7 @@ const NewsCard = ({
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div className="absolute top-2 left-2 flex gap-1 items-center">
-            <span className="text-xs font-medium bg-primary/90 text-white rounded-full px-2 py-0.5">
+            <span className="text-xs font-medium bg-news-primary text-white rounded-full px-2 py-0.5">
               {article.category}
             </span>
             {onListen && (
@@ -96,7 +96,7 @@ const NewsCard = ({
                   onLike(article.id);
                 }}
               >
-                <Heart size={14} className={article.liked ? "fill-primary text-primary" : ""} />
+                <Heart size={14} className={article.liked ? "fill-news-accent text-news-accent" : ""} />
               </Button>
             )}
             
@@ -124,7 +124,7 @@ const NewsCard = ({
                   onSave(article.id);
                 }}
               >
-                <Bookmark size={14} className={article.saved ? "fill-primary text-primary" : ""} />
+                <Bookmark size={14} className={article.saved ? "fill-news-accent text-news-accent" : ""} />
               </Button>
             )}
           </div>
@@ -133,7 +133,7 @@ const NewsCard = ({
         <div className="p-3 flex-1 flex flex-col">
           <h3
             className={cn(
-              "font-bold text-foreground line-clamp-2 mb-1 transition-colors group-hover:text-primary",
+              "font-bold text-foreground line-clamp-2 mb-1 transition-colors group-hover:text-news-primary",
               {
                 "text-base": size === "large",
                 "text-sm": size === "medium",
@@ -158,7 +158,7 @@ const NewsCard = ({
             <div className="flex items-center gap-2 text-xs">
               {onLike && showMetrics && (
                 <div className="text-muted-foreground flex items-center">
-                  <Heart size={12} className={article.liked ? "fill-primary text-primary mr-1" : "mr-1"} />
+                  <Heart size={12} className={article.liked ? "fill-news-accent text-news-accent mr-1" : "mr-1"} />
                   <span>{article.likes}</span>
                 </div>
               )}
@@ -171,7 +171,7 @@ const NewsCard = ({
               )}
               
               {onSave && article.saved && (
-                <Bookmark size={12} className="fill-primary text-primary" />
+                <Bookmark size={12} className="fill-news-accent text-news-accent" />
               )}
             </div>
           </div>

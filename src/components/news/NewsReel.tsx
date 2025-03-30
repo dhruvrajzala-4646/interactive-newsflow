@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight, BookOpen, MessageCircle, Headphones, ArrowLeft } from "lucide-react";
+import { Heart, MessageSquare, Share2, Bookmark, BookOpen, MessageCircle, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NewsArticle } from "@/data/newsData";
@@ -77,7 +77,7 @@ const NewsReel = ({
   }, [article.id]);
 
   return (
-    <div className="news-reel h-screen w-full relative snap-center" {...handlers}>
+    <div className="news-reel h-screen w-full relative snap-center reel-item" {...handlers}>
       <img
         src={article.imageUrl}
         alt={article.title}
@@ -85,49 +85,39 @@ const NewsReel = ({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       
-      {/* Action Buttons - Permanently visible */}
-      <div className="fixed-action-buttons absolute left-4 top-1/2 transform -translate-y-1/2 space-y-4 z-30">
+      {/* Permanently Visible Action Buttons - Correctly positioned on left side */}
+      <div className="action-buttons">
         <Button 
           onClick={() => onSwipeLeft(article)}
-          className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+          className="action-button"
           aria-label="Read Full Article"
         >
           <BookOpen size={18} />
-          <span className="text-sm font-medium">Read Article</span>
+          <span>Read Article</span>
         </Button>
         
         <Button
           onClick={() => onSwipeRight()}
-          className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+          className="action-button"
           aria-label="Ask AI"
         >
           <MessageCircle size={18} />
-          <span className="text-sm font-medium">Ask AI</span>
+          <span>Ask AI</span>
         </Button>
         
         {onListen && (
           <Button
             onClick={() => onListen(article)}
-            className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+            className="action-button"
             aria-label="Listen to Article"
           >
             <Headphones size={18} />
-            <span className="text-sm font-medium">Listen</span>
+            <span>Listen</span>
           </Button>
         )}
       </div>
       
-      {/* Swipe Indicators */}
-      <div className="swipe-indicator swipe-left absolute left-4 bottom-20 transform bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 flex items-center gap-2">
-        <ChevronLeft size={20} className="text-white" />
-        <span className="text-white text-xs">Read Full Article</span>
-      </div>
-      
-      <div className="swipe-indicator swipe-right absolute right-4 bottom-20 transform bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 flex items-center gap-2">
-        <span className="text-white text-xs">Ask AI</span>
-        <ChevronRight size={20} className="text-white" />
-      </div>
-      
+      {/* Smart Summary Popup */}
       {showSmartSummary && (
         <div className="absolute left-4 right-4 top-1/3 z-20 bg-black/70 backdrop-blur-md rounded-xl p-4 border border-white/10 animate-fade-in">
           <h4 className="font-bold text-white text-lg mb-2">Smart Summary</h4>
@@ -149,7 +139,7 @@ const NewsReel = ({
       
       <div className="news-reel-content absolute inset-0 flex flex-col justify-end px-4 md:px-8 pb-20 z-10">
         <div className="mb-4 animate-fade-in">
-          <div className="text-sm font-medium text-primary bg-primary/20 backdrop-blur-sm rounded-full px-3 py-1 inline-block mb-2">
+          <div className="text-sm font-medium bg-news-primary/80 text-white backdrop-blur-sm rounded-full px-3 py-1 inline-block mb-2">
             {article.category}
           </div>
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-3">
@@ -170,10 +160,10 @@ const NewsReel = ({
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-primary hover:bg-white/10"
+              className="text-white hover:text-news-accent hover:bg-white/10"
               onClick={() => onLike(article.id)}
             >
-              <Heart size={24} className={article.liked ? "fill-primary text-primary" : ""} />
+              <Heart size={24} className={article.liked ? "fill-news-accent text-news-accent" : ""} />
             </Button>
             <span className="text-white">{article.likes}</span>
           </div>
@@ -182,7 +172,7 @@ const NewsReel = ({
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-primary hover:bg-white/10"
+              className="text-white hover:text-news-accent hover:bg-white/10"
               onClick={() => onComment(article.id)}
             >
               <MessageSquare size={24} />
@@ -193,7 +183,7 @@ const NewsReel = ({
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:text-primary hover:bg-white/10"
+            className="text-white hover:text-news-accent hover:bg-white/10"
             onClick={() => onShare(article.id)}
           >
             <Share2 size={24} />
@@ -202,10 +192,10 @@ const NewsReel = ({
           <Button
             variant="ghost"
             size="icon" 
-            className="text-white hover:text-primary hover:bg-white/10"
+            className="text-white hover:text-news-accent hover:bg-white/10"
             onClick={() => onSave(article.id)}
           >
-            <Bookmark size={24} className={article.saved ? "fill-primary text-primary" : ""} />
+            <Bookmark size={24} className={article.saved ? "fill-news-accent text-news-accent" : ""} />
           </Button>
         </div>
         
@@ -214,7 +204,7 @@ const NewsReel = ({
         </div>
       </div>
       
-      <div className="progress-bar absolute bottom-0 left-0 h-1 bg-primary z-20" style={{ width: `${progress}%` }} />
+      <div className="progress-bar absolute bottom-0 left-0 h-1 bg-news-accent z-20" style={{ width: `${progress}%` }} />
     </div>
   );
 };

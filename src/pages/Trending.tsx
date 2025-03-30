@@ -153,31 +153,44 @@ const Trending = () => {
     setAudioPlayerMinimized(false);
   }, []);
 
-  // Use IntersectionObserver for lazy loading
+  // Performance optimization with progressive loading
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    document.querySelectorAll('.lazy-load').forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => {
-      observer.disconnect();
+    const observerOptions = {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1
     };
+    
+    const handleIntersect = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          
+          // Add animation classes once in view
+          requestAnimationFrame(() => {
+            target.style.opacity = '1';
+            target.style.transform = 'translateY(0)';
+          });
+          
+          // Stop observing after animation
+          observer.unobserve(target);
+        }
+      });
+    };
+    
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    
+    // Find and observe all sections
+    document.querySelectorAll('.lazy-section').forEach(section => {
+      section.classList.add('opacity-0', 'transform', 'translate-y-8', 'transition-all', 'duration-500');
+      observer.observe(section);
+    });
+    
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="min-h-screen pb-20 bg-background">
+    <div className="min-h-screen pb-20 bg-background overflow-y-auto scrollbar-hide">
       <TopNav />
       
       {/* Breaking News Ticker */}
@@ -186,11 +199,11 @@ const Trending = () => {
       </div>
       
       <div className="container py-6">
-        <h1 className="text-2xl font-bold mb-6">Trending News</h1>
+        <h1 className="text-2xl font-bold mb-6 text-news-primary">Trending News</h1>
         
         {/* Featured Stories Section */}
-        <section className="mb-10 lazy-load opacity-0">
-          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Featured Stories</h2>
+        <section className="mb-10 lazy-section">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-news-primary pl-3">Featured Stories</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {featuredArticles.map((article, index) => (
@@ -205,10 +218,11 @@ const Trending = () => {
                     src={article.imageUrl}
                     alt={article.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="text-sm font-medium text-primary bg-primary/20 backdrop-blur-sm rounded-full px-3 py-1 inline-block w-fit">
+                      <div className="text-sm font-medium text-white bg-news-primary/90 backdrop-blur-sm rounded-full px-3 py-1 inline-block w-fit">
                         {article.category}
                       </div>
                       <Button
@@ -234,23 +248,23 @@ const Trending = () => {
                       <div className="flex items-center gap-3">
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleLike(article.id); }}
-                          className="text-white/90 hover:text-primary flex items-center"
+                          className="text-white/90 hover:text-news-accent flex items-center"
                         >
-                          <Heart size={20} className={article.liked ? "fill-primary text-primary" : ""} />
+                          <Heart size={20} className={article.liked ? "fill-news-accent text-news-accent" : ""} />
                           <span className="ml-1 text-xs">{article.likes}</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleComment(article.id); }}
-                          className="text-white/90 hover:text-primary flex items-center"
+                          className="text-white/90 hover:text-news-accent flex items-center"
                         >
                           <MessageSquare size={20} />
                           <span className="ml-1 text-xs">{article.comments || 0}</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleSave(article.id); }}
-                          className="text-white/90 hover:text-primary"
+                          className="text-white/90 hover:text-news-accent"
                         >
-                          <Bookmark size={20} className={article.saved ? "fill-primary text-primary" : ""} />
+                          <Bookmark size={20} className={article.saved ? "fill-news-accent text-news-accent" : ""} />
                         </button>
                       </div>
                     </div>
@@ -262,8 +276,8 @@ const Trending = () => {
         </section>
         
         {/* Trending Topics Section */}
-        <section className="mb-10 lazy-load opacity-0">
-          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Trending Topics</h2>
+        <section className="mb-10 lazy-section">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-news-primary pl-3">Trending Topics</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {trendingArticles.map((article, index) => (
@@ -284,8 +298,8 @@ const Trending = () => {
         </section>
         
         {/* Most Liked Blogs Section */}
-        <section className="mb-10 lazy-load opacity-0">
-          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Most Liked Blogs</h2>
+        <section className="mb-10 lazy-section">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-news-primary pl-3">Most Liked Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {mostLikedBlogs.map((article, index) => (
@@ -306,8 +320,8 @@ const Trending = () => {
         </section>
         
         {/* Latest Blogs Section */}
-        <section className="mb-10 lazy-load opacity-0">
-          <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Latest Blogs</h2>
+        <section className="mb-10 lazy-section">
+          <h2 className="text-xl font-semibold mb-4 border-l-4 border-news-primary pl-3">Latest Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {latestBlogs.map((article, index) => (

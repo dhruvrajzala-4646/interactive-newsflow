@@ -69,7 +69,7 @@ const FullArticle = ({
               className="hover:bg-background/20 rounded-full"
               aria-label="Like"
             >
-              <Heart size={18} className={article.liked ? "fill-primary text-primary" : ""} />
+              <Heart size={18} className={article.liked ? "fill-news-accent text-news-accent" : ""} />
             </Button>
             
             <Button
@@ -99,7 +99,7 @@ const FullArticle = ({
               className="hover:bg-background/20 rounded-full"
               aria-label="Save"
             >
-              <Bookmark size={18} className={article.saved ? "fill-primary text-primary" : ""} />
+              <Bookmark size={18} className={article.saved ? "fill-news-accent text-news-accent" : ""} />
             </Button>
             
             {onListen && (
@@ -120,7 +120,7 @@ const FullArticle = ({
       <ScrollArea className="h-[calc(100vh-60px)]">
         <div className="container mx-auto max-w-4xl p-4 md:p-6 animate-fade-in">
           <div className="mb-8 text-center animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 inline-block mb-2">
+            <div className="text-sm font-medium text-news-primary bg-news-primary/10 rounded-full px-3 py-1 inline-block mb-2">
               {article.category}
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
@@ -132,7 +132,7 @@ const FullArticle = ({
               <span>{article.date}</span>
               <span>•</span>
               <div className="flex items-center gap-1">
-                <Heart size={14} className={article.liked ? "fill-primary text-primary" : ""} />
+                <Heart size={14} className={article.liked ? "fill-news-accent text-news-accent" : ""} />
                 <span>{article.likes}</span>
               </div>
               <span>•</span>
@@ -144,8 +144,8 @@ const FullArticle = ({
             
             {/* Smart Summary Section */}
             <div className="bg-muted/30 rounded-lg p-4 mb-8 mx-auto max-w-2xl border border-border flex items-start gap-3">
-              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0 mt-1">
-                <Sparkles size={18} className="text-primary" />
+              <div className="h-10 w-10 rounded-full bg-news-primary/20 flex items-center justify-center shrink-0 mt-1">
+                <Sparkles size={18} className="text-news-primary" />
               </div>
               <div className="flex-1 text-left">
                 <div className="flex justify-between items-center mb-2">
@@ -173,7 +173,7 @@ const FullArticle = ({
             />
           </div>
           
-          <div className="text-lg font-medium mb-8 text-center border-l-4 border-primary pl-4 py-2 bg-muted/20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <div className="text-lg font-medium mb-8 text-center border-l-4 border-news-primary pl-4 py-2 bg-muted/20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             {article.summary}
           </div>
           

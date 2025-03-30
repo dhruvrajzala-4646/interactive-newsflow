@@ -12,7 +12,15 @@ import AudioPlayer from "@/components/news/AudioPlayer";
 const Index = () => {
   const { toast } = useToast();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [articles, setArticles] = useState<NewsArticle[]>(newsData);
+  const [articles, setArticles] = useState<NewsArticle[]>(
+    // Make sure we have at least 5 articles
+    newsData.length >= 5
+      ? newsData
+      : [
+          ...newsData,
+          ...newsData.slice(0, Math.max(0, 5 - newsData.length))
+        ]
+  );
   const [showArticle, setShowArticle] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
@@ -25,7 +33,7 @@ const Index = () => {
   const reelsRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle wheel scrolling for desktop with improved smooth animation
+  // Optimized wheel handling for desktop with improved performance
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -38,10 +46,12 @@ const Index = () => {
       setIsScrolling(true);
       
       if (e.deltaY > 0) {
+        // Going down
         if (currentIndex < articles.length - 1) {
           setCurrentIndex(prev => prev + 1);
         }
       } else {
+        // Going up
         if (currentIndex > 0) {
           setCurrentIndex(prev => prev - 1);
         }
@@ -54,7 +64,7 @@ const Index = () => {
       
       scrollTimeoutRef.current = setTimeout(() => {
         setIsScrolling(false);
-      }, 800); // Longer timeout for smoother scrolling experience
+      }, 600); // Longer timeout for smoother scrolling experience
     };
 
     const container = containerRef.current;
@@ -72,18 +82,67 @@ const Index = () => {
     };
   }, [currentIndex, articles.length, isScrolling]);
 
-  // Smooth scroll to current reel when index changes
+  // Optimized touch handling for mobile with improved performance
   useEffect(() => {
-    if (reelsRef.current) {
-      const targetReel = reelsRef.current.children[currentIndex] as HTMLElement;
-      if (targetReel) {
-        targetReel.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start' 
-        });
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isScrolling) {
+        e.preventDefault();
       }
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndY = e.changedTouches[0].clientY;
+      
+      const deltaY = touchStartY - touchEndY;
+      
+      if (Math.abs(deltaY) < 50) return; // Require more significant swipe
+      
+      setIsScrolling(true);
+      
+      if (deltaY > 0) {
+        // Swipe Up - go to next
+        if (currentIndex < articles.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        }
+      } else {
+        // Swipe Down - go to previous
+        if (currentIndex > 0) {
+          setCurrentIndex(prev => prev - 1);
+        }
+      }
+      
+      // Add a delay before allowing another swipe
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 600);
+    };
+    
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
+      container.addEventListener('touchmove', handleTouchMove, { passive: false });
+      container.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
-  }, [currentIndex]);
+    
+    return () => {
+      if (container) {
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchmove', handleTouchMove);
+        container.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [currentIndex, articles.length, isScrolling]);
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
@@ -176,69 +235,6 @@ const Index = () => {
     setAudioPlayerMinimized(false);
   }, []);
 
-  // Handle touch events for mobile swipe with smoother animation
-  useEffect(() => {
-    let touchStartY = 0;
-    let touchEndY = 0;
-    
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isScrolling) {
-        e.preventDefault();
-        return;
-      }
-    };
-    
-    const handleTouchEnd = (e: TouchEvent) => {
-      touchEndY = e.changedTouches[0].clientY;
-      
-      const deltaY = touchStartY - touchEndY;
-      
-      if (Math.abs(deltaY) < 50) return; // Require more significant swipe
-      
-      setIsScrolling(true);
-      
-      if (deltaY > 0) {
-        // Swipe Up - go to next
-        if (currentIndex < articles.length - 1) {
-          setCurrentIndex(prev => prev + 1);
-        }
-      } else {
-        // Swipe Down - go to previous
-        if (currentIndex > 0) {
-          setCurrentIndex(prev => prev - 1);
-        }
-      }
-      
-      // Add a delay before allowing another swipe
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 800);
-    };
-    
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('touchstart', handleTouchStart);
-      container.addEventListener('touchmove', handleTouchMove, { passive: false });
-      container.addEventListener('touchend', handleTouchEnd);
-    }
-    
-    return () => {
-      if (container) {
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchmove', handleTouchMove);
-        container.removeEventListener('touchend', handleTouchEnd);
-      }
-    };
-  }, [currentIndex, articles.length, isScrolling]);
-
   // Get related articles for the current selected article
   const relatedArticles = selectedArticle
     ? articles
@@ -254,35 +250,50 @@ const Index = () => {
     <div className="h-screen w-screen overflow-hidden bg-background" ref={containerRef}>
       <TopNav />
       
-      {/* Main Feed */}
-      <div className="h-full w-full pt-16 pb-16" ref={reelsRef}>
-        <div className="h-full snap-y snap-mandatory overflow-y-auto scrollbar-hide">
-          {articles.map((article, index) => (
-            <div 
-              key={article.id} 
-              className={`h-full w-full snap-start ${index === currentIndex ? 'block' : 'hidden md:block'}`}
-              style={{
-                transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.4s ease',
-                transform: `translateY(${(index - currentIndex) * 100}%)`,
-                opacity: index === currentIndex ? 1 : 0.5
-              }}
-            >
-              <NewsReel
-                article={article}
-                onLike={handleLike}
-                onComment={handleComment}
-                onShare={handleShare}
-                onSave={handleSave}
-                onListen={handleListen}
-                onSwipeLeft={handleSwipeLeft}
-                onSwipeRight={handleSwipeRight}
-                currentIndex={index}
-                totalArticles={articles.length}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Main Feed with improved scrolling */}
+      <div className="h-full w-full pt-16 pb-16 reel-container" ref={reelsRef}>
+        {articles.slice(0, 5).map((article, index) => (
+          <div 
+            key={article.id}
+            className={`w-full h-full ${index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              transition: 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+              transform: `translateY(${(index - currentIndex) * 100}%)`,
+              zIndex: index === currentIndex ? 10 : 0
+            }}
+          >
+            <NewsReel
+              article={article}
+              onLike={handleLike}
+              onComment={handleComment}
+              onShare={handleShare}
+              onSave={handleSave}
+              onListen={handleListen}
+              onSwipeLeft={handleSwipeLeft}
+              onSwipeRight={handleSwipeRight}
+              currentIndex={index}
+              totalArticles={articles.length}
+            />
+          </div>
+        ))}
       </div>
+
+      {/* Previous/Next Navigation Indicators */}
+      {currentIndex > 0 && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-16 z-20 opacity-30 text-white text-sm font-medium">
+          <span>⬆️ Swipe up for previous story</span>
+        </div>
+      )}
+      
+      {currentIndex < articles.length - 1 && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 opacity-30 text-white text-sm font-medium">
+          <span>⬇️ Swipe down for next story</span>
+        </div>
+      )}
       
       {/* Fullscreen Article (slide from right) */}
       <FullArticle

@@ -68,10 +68,12 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         news: {
-          primary: "#3b82f6",
-          secondary: "#1a365d",
-          accent: "#f97316",
-          background: "#f8fafc",
+          primary: "#0077B6", // Deep Tech Blue
+          secondary: "#6C63FF", // Soft Purple
+          accent: "#32AFA9", // Teal
+          accent2: "#FFB400", // Gold
+          background: "#F5F7FA", // Light Grey-White
+          dark: "#1B1E24", // Dark Mode Option
           card: "#ffffff",
           text: "#334155",
         },
@@ -130,6 +132,14 @@ export default {
           "0%": { transform: "translateY(0)" },
           "100%": { transform: "translateY(100%)" },
         },
+        "reel-scroll-in": {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "reel-scroll-out": {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-100%)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -144,6 +154,8 @@ export default {
         "scale-out": "scale-out 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "slide-up": "slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "slide-down": "slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "reel-scroll-in": "reel-scroll-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "reel-scroll-out": "reel-scroll-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },
