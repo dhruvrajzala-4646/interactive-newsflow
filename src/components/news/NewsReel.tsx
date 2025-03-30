@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight, ArrowLeft, MessageCircle, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NewsArticle } from "@/data/newsData";
@@ -12,6 +12,7 @@ interface NewsReelProps {
   onComment: (id: number) => void;
   onShare: (id: number) => void;
   onSave: (id: number) => void;
+  onListen?: (article: NewsArticle) => void;
   onSwipeLeft: (article: NewsArticle) => void;
   onSwipeRight: () => void;
   currentIndex: number;
@@ -24,6 +25,7 @@ const NewsReel = ({
   onComment,
   onShare,
   onSave,
+  onListen,
   onSwipeLeft,
   onSwipeRight,
   currentIndex,
@@ -31,11 +33,14 @@ const NewsReel = ({
 }: NewsReelProps) => {
   const [progress, setProgress] = useState(0);
   const [showSummary, setShowSummary] = useState(false);
+  const [showSmartSummary, setShowSmartSummary] = useState(false);
   const progressInterval = useRef<number | null>(null);
   
   const handlers = useSwipeable({
     onSwipedLeft: () => onSwipeLeft(article),
     onSwipedRight: () => onSwipeRight(),
+    onSwipedUp: () => setShowSmartSummary(true),
+    onSwipedDown: () => setShowSmartSummary(false),
     preventScrollOnSwipe: true,
     trackMouse: true
   });
@@ -44,6 +49,7 @@ const NewsReel = ({
     // Reset progress and summary on article change
     setProgress(0);
     setShowSummary(false);
+    setShowSmartSummary(false);
     
     // Start progress
     const startTime = Date.now();
@@ -79,13 +85,57 @@ const NewsReel = ({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       
-      <div className="swipe-indicator swipe-left absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 animate-pulse">
+      <div className="action-buttons absolute left-4 top-1/2 space-y-4 z-30">
+        <Button 
+          onClick={() => onSwipeLeft(article)}
+          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+        >
+          <ArrowLeft size={18} className="text-white group-hover:scale-110 transition-transform" />
+        </Button>
+        
+        <Button
+          onClick={() => onSwipeRight()}
+          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+        >
+          <MessageCircle size={18} className="text-white group-hover:scale-110 transition-transform" />
+        </Button>
+        
+        {onListen && (
+          <Button
+            onClick={() => onListen(article)}
+            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+          >
+            <Headphones size={18} className="text-white group-hover:scale-110 transition-transform" />
+          </Button>
+        )}
+      </div>
+      
+      <div className="swipe-indicator swipe-left absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100">
         <ChevronLeft size={24} className="text-white" />
       </div>
       
-      <div className="swipe-indicator swipe-right absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 animate-pulse">
+      <div className="swipe-indicator swipe-right absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100">
         <ChevronRight size={24} className="text-white" />
       </div>
+      
+      {showSmartSummary && (
+        <div className="absolute left-4 right-4 top-1/3 z-20 bg-black/70 backdrop-blur-md rounded-xl p-4 border border-white/10 animate-fade-in">
+          <h4 className="font-bold text-white text-lg mb-2">Smart Summary</h4>
+          <p className="text-white/90 text-sm mb-3">
+            {article.summary}
+          </p>
+          <p className="text-white/70 text-xs mb-3">
+            This article is trending because of its relevance to current events in {article.category}.
+          </p>
+          <Button 
+            onClick={() => onSwipeLeft(article)} 
+            variant="outline" 
+            className="text-xs text-white border-white/30 hover:bg-white/20"
+          >
+            Expand Article
+          </Button>
+        </div>
+      )}
       
       <div className="news-reel-content absolute inset-0 flex flex-col justify-end px-4 md:px-8 pb-20 z-10">
         <div className="mb-4 animate-fade-in">
@@ -106,7 +156,7 @@ const NewsReel = ({
         </div>
         
         <div className="flex justify-between items-center mb-16 animate-fade-in">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Button
               variant="ghost"
               size="icon"
@@ -118,7 +168,7 @@ const NewsReel = ({
             <span className="text-white">{article.likes}</span>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Button
               variant="ghost"
               size="icon"
@@ -127,7 +177,7 @@ const NewsReel = ({
             >
               <MessageSquare size={24} />
             </Button>
-            <span className="text-white">{article.comments}</span>
+            <span className="text-white">{article.comments || 0}</span>
           </div>
           
           <Button

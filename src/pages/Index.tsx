@@ -7,7 +7,7 @@ import BottomNav from "@/components/navigation/BottomNav";
 import NewsReel from "@/components/news/NewsReel";
 import FullArticle from "@/components/news/FullArticle";
 import AiAssistant from "@/components/news/AiAssistant";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import AudioPlayer from "@/components/news/AudioPlayer";
 
 const Index = () => {
   const { toast } = useToast();
@@ -17,6 +17,10 @@ const Index = () => {
   const [showAssistant, setShowAssistant] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [audioPlayerOpen, setAudioPlayerOpen] = useState(false);
+  const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(false);
+  const [playingArticle, setPlayingArticle] = useState<NewsArticle | null>(null);
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const reelsRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -147,18 +151,30 @@ const Index = () => {
   const closeAssistant = useCallback(() => {
     setShowAssistant(false);
   }, []);
-
-  const scrollToNext = useCallback(() => {
-    if (currentIndex < articles.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  }, [currentIndex, articles.length]);
-
-  const scrollToPrevious = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  }, [currentIndex]);
+  
+  const handleListen = useCallback((article: NewsArticle) => {
+    setPlayingArticle(article);
+    setAudioPlayerOpen(true);
+    setAudioPlayerMinimized(false);
+    
+    toast({
+      title: "Now Playing",
+      description: `"${article.title}" is now playing`,
+    });
+  }, [toast]);
+  
+  const closeAudioPlayer = useCallback(() => {
+    setAudioPlayerOpen(false);
+    setPlayingArticle(null);
+  }, []);
+  
+  const minimizeAudioPlayer = useCallback(() => {
+    setAudioPlayerMinimized(true);
+  }, []);
+  
+  const maximizeAudioPlayer = useCallback(() => {
+    setAudioPlayerMinimized(false);
+  }, []);
 
   // Handle touch events for mobile swipe with smoother animation
   useEffect(() => {
@@ -246,8 +262,9 @@ const Index = () => {
               key={article.id} 
               className={`h-full w-full snap-start ${index === currentIndex ? 'block' : 'hidden md:block'}`}
               style={{
-                transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)',
-                transform: `translateY(${(index - currentIndex) * 100}%)`
+                transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.4s ease',
+                transform: `translateY(${(index - currentIndex) * 100}%)`,
+                opacity: index === currentIndex ? 1 : 0.5
               }}
             >
               <NewsReel
@@ -256,6 +273,7 @@ const Index = () => {
                 onComment={handleComment}
                 onShare={handleShare}
                 onSave={handleSave}
+                onListen={handleListen}
                 onSwipeLeft={handleSwipeLeft}
                 onSwipeRight={handleSwipeRight}
                 currentIndex={index}
@@ -275,14 +293,25 @@ const Index = () => {
         onComment={handleComment}
         onShare={handleShare}
         onSave={handleSave}
+        onListen={handleListen}
         relatedArticles={relatedArticles}
       />
       
-      {/* AI Assistant (slide from left) */}
+      {/* AI Assistant (popup modal) */}
       <AiAssistant
         isOpen={showAssistant}
         onClose={closeAssistant}
         currentArticle={articles[currentIndex]}
+      />
+      
+      {/* Audio Player */}
+      <AudioPlayer 
+        article={playingArticle}
+        isOpen={audioPlayerOpen}
+        isMinimized={audioPlayerMinimized}
+        onClose={closeAudioPlayer}
+        onMinimize={minimizeAudioPlayer}
+        onMaximize={maximizeAudioPlayer}
       />
       
       <BottomNav />

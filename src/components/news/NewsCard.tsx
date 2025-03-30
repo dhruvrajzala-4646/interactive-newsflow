@@ -1,7 +1,8 @@
 
-import { Heart, MessageSquare, Bookmark } from "lucide-react";
+import { Heart, MessageSquare, Bookmark, Headphones, ArrowLeft } from "lucide-react";
 import { NewsArticle } from "@/data/newsData";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -9,6 +10,7 @@ interface NewsCardProps {
   onLike?: (id: number) => void;
   onComment?: (id: number) => void;
   onSave?: (id: number) => void;
+  onListen?: (article: NewsArticle) => void;
   onClick?: (article: NewsArticle) => void;
   showMetrics?: boolean;
 }
@@ -19,6 +21,7 @@ const NewsCard = ({
   onLike,
   onComment,
   onSave,
+  onListen,
   onClick,
   showMetrics = false
 }: NewsCardProps) => {
@@ -54,10 +57,23 @@ const NewsCard = ({
             alt={article.title}
             className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
           />
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-2 left-2 flex gap-1 items-center">
             <span className="text-xs font-medium bg-primary/90 text-white rounded-full px-2 py-0.5">
               {article.category}
             </span>
+            {onListen && (
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="h-6 w-6 bg-white/30 backdrop-blur-sm rounded-full hover:bg-white/50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onListen(article);
+                }}
+              >
+                <Headphones size={12} className="text-white" />
+              </Button>
+            )}
           </div>
         </div>
         
@@ -109,7 +125,7 @@ const NewsCard = ({
                   className="text-muted-foreground hover:text-primary flex items-center"
                 >
                   <MessageSquare size={14} />
-                  {showMetrics && <span className="ml-1">22</span>}
+                  {showMetrics && <span className="ml-1">{article.comments || 0}</span>}
                 </button>
               )}
               

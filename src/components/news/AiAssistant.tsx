@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NewsArticle } from "@/data/newsData";
@@ -48,7 +48,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
       }
       
       setMessages((prev) => [...prev, { text: response, isUser: false }]);
-    }, 1000);
+    }, 600);
     
     // Clear input
     setInput("");
@@ -68,26 +68,28 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
     }
   }, [currentArticle?.id]);
 
-  // Fixed styling for the AI assistant to appear as a full page overlay
+  // Popup style instead of full page
   return (
     <div 
       className={cn(
-        "fixed inset-0 bg-background z-50 transform transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full"
+        "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-[70vh] bg-card rounded-xl shadow-2xl z-50 transition-all duration-500 overflow-hidden",
+        isOpen 
+          ? "opacity-100 scale-100" 
+          : "opacity-0 scale-95 pointer-events-none"
       )}
     >
       <div className="flex flex-col h-full">
-        <div className="sticky top-0 bg-background/80 backdrop-blur-sm border-b border-border z-10">
-          <div className="flex items-center p-4">
-            <Button variant="ghost" size="icon" onClick={onClose} className="mr-2">
-              <ArrowLeft size={24} />
-            </Button>
+        <div className="sticky top-0 bg-card border-b border-border z-10">
+          <div className="flex justify-between items-center p-4">
             <div>
               <h2 className="text-lg font-bold">AI News Assistant</h2>
               <p className="text-xs text-muted-foreground">
-                Ask questions about "{currentArticle?.title.substring(0, 20)}..."
+                Ask questions about "{currentArticle?.title ? `${currentArticle.title.substring(0, 20)}...` : 'the article'}"
               </p>
             </div>
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full h-8 w-8 hover:bg-muted">
+              <X size={18} />
+            </Button>
           </div>
         </div>
         
@@ -100,6 +102,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
                   "flex animate-fade-in",
                   message.isUser ? "justify-end" : "justify-start"
                 )}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div
                   className={cn(
@@ -117,7 +120,7 @@ const AiAssistant = ({ isOpen, onClose, currentArticle }: AiAssistantProps) => {
           </div>
         </ScrollArea>
         
-        <div className="sticky bottom-0 bg-background p-4 border-t border-border">
+        <div className="sticky bottom-0 bg-card p-4 border-t border-border">
           <div className="flex gap-2">
             <Input
               placeholder="Ask about this news..."

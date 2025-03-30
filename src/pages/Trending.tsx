@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { newsData, NewsArticle } from "@/data/newsData";
 import TopNav from "@/components/navigation/TopNav";
@@ -7,26 +7,42 @@ import BottomNav from "@/components/navigation/BottomNav";
 import NewsTicker from "@/components/news/NewsTicker";
 import NewsCard from "@/components/news/NewsCard";
 import FullArticle from "@/components/news/FullArticle";
-import { Heart, MessageSquare, Bookmark } from "lucide-react";
+import AudioPlayer from "@/components/news/AudioPlayer";
+import { Heart, MessageSquare, Bookmark, Headphones } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Trending = () => {
   const { toast } = useToast();
   const [articles, setArticles] = useState<NewsArticle[]>(newsData);
   const [showArticle, setShowArticle] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [audioPlayerOpen, setAudioPlayerOpen] = useState(false);
+  const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(false);
+  const [playingArticle, setPlayingArticle] = useState<NewsArticle | null>(null);
   
-  const featuredArticles = articles.filter(article => article.featured);
-  const trendingArticles = articles.filter(article => article.trending && !article.featured);
+  // Additional sections
+  const featuredArticles = articles
+    .filter(article => article.featured)
+    .sort((a, b) => b.likes - a.likes); // Sort by likes
+    
+  const trendingArticles = articles
+    .filter(article => article.trending && !article.featured)
+    .sort((a, b) => b.likes - a.likes) // Sort by likes
+    .slice(0, 4);
   
-  // Create a new section for latest blogs - we'll take the 3 most recent articles
-  const latestBlogs = [...articles].sort((a, b) => {
-    const dateA = new Date(a.date.split(" ")[0]);
-    const dateB = new Date(b.date.split(" ")[0]);
-    return dateB.getTime() - dateA.getTime();
-  }).slice(0, 3);
+  // Latest blogs - sort by date
+  const latestBlogs = [...articles]
+    .sort((a, b) => {
+      const dateA = new Date(a.date.split(" ")[0]);
+      const dateB = new Date(b.date.split(" ")[0]);
+      return dateB.getTime() - dateA.getTime();
+    })
+    .slice(0, 3);
   
-  // Create a new section for most liked blogs
-  const mostLikedBlogs = [...articles].sort((a, b) => b.likes - a.likes).slice(0, 3);
+  // Most liked blogs
+  const mostLikedBlogs = [...articles]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, 3);
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
@@ -86,6 +102,30 @@ const Trending = () => {
   const closeArticle = useCallback(() => {
     setShowArticle(false);
   }, []);
+  
+  const handleListen = useCallback((article: NewsArticle) => {
+    setPlayingArticle(article);
+    setAudioPlayerOpen(true);
+    setAudioPlayerMinimized(false);
+    
+    toast({
+      title: "Now Playing",
+      description: `"${article.title}" is now playing`,
+    });
+  }, [toast]);
+  
+  const closeAudioPlayer = useCallback(() => {
+    setAudioPlayerOpen(false);
+    setPlayingArticle(null);
+  }, []);
+  
+  const minimizeAudioPlayer = useCallback(() => {
+    setAudioPlayerMinimized(true);
+  }, []);
+  
+  const maximizeAudioPlayer = useCallback(() => {
+    setAudioPlayerMinimized(false);
+  }, []);
 
   // Get related articles for the current selected article
   const relatedArticles = selectedArticle
@@ -129,8 +169,21 @@ const Trending = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
-                    <div className="text-sm font-medium text-primary bg-primary/20 backdrop-blur-sm rounded-full px-3 py-1 inline-block mb-2 w-fit">
-                      {article.category}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="text-sm font-medium text-primary bg-primary/20 backdrop-blur-sm rounded-full px-3 py-1 inline-block w-fit">
+                        {article.category}
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleListen(article);
+                        }}
+                      >
+                        <Headphones size={14} />
+                      </Button>
                     </div>
                     <h3 className={`${index === 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"} font-bold text-white mb-2`}>
                       {article.title}
@@ -143,17 +196,17 @@ const Trending = () => {
                       <div className="flex items-center gap-3">
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleLike(article.id); }}
-                          className="text-white/90 hover:text-primary"
+                          className="text-white/90 hover:text-primary flex items-center"
                         >
                           <Heart size={20} className={article.liked ? "fill-primary text-primary" : ""} />
                           <span className="ml-1 text-xs">{article.likes}</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleComment(article.id); }}
-                          className="text-white/90 hover:text-primary"
+                          className="text-white/90 hover:text-primary flex items-center"
                         >
                           <MessageSquare size={20} />
-                          <span className="ml-1 text-xs">22</span>
+                          <span className="ml-1 text-xs">{article.comments || 0}</span>
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleSave(article.id); }}
@@ -174,15 +227,16 @@ const Trending = () => {
         <div className="mb-10">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Trending Topics</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trendingArticles.map((article) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${trendingArticles.indexOf(article) * 0.1}s`}}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {trendingArticles.map((article, index) => (
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
                   onLike={handleLike}
                   onComment={handleComment}
                   onSave={handleSave}
+                  onListen={handleListen}
                   onClick={handleArticleClick}
                   showMetrics={true}
                 />
@@ -196,14 +250,15 @@ const Trending = () => {
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Most Liked Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mostLikedBlogs.map((article) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${mostLikedBlogs.indexOf(article) * 0.1}s`}}>
+            {mostLikedBlogs.map((article, index) => (
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
                   onLike={handleLike}
                   onComment={handleComment}
                   onSave={handleSave}
+                  onListen={handleListen}
                   onClick={handleArticleClick}
                   showMetrics={true}
                 />
@@ -217,14 +272,15 @@ const Trending = () => {
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Latest Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {latestBlogs.map((article) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${latestBlogs.indexOf(article) * 0.1}s`}}>
+            {latestBlogs.map((article, index) => (
+              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
                   onLike={handleLike}
                   onComment={handleComment}
                   onSave={handleSave}
+                  onListen={handleListen}
                   onClick={handleArticleClick}
                   showMetrics={true}
                 />
@@ -243,7 +299,18 @@ const Trending = () => {
         onComment={handleComment}
         onShare={handleShare}
         onSave={handleSave}
+        onListen={handleListen}
         relatedArticles={relatedArticles}
+      />
+      
+      {/* Audio Player */}
+      <AudioPlayer 
+        article={playingArticle}
+        isOpen={audioPlayerOpen}
+        isMinimized={audioPlayerMinimized}
+        onClose={closeAudioPlayer}
+        onMinimize={minimizeAudioPlayer}
+        onMaximize={maximizeAudioPlayer}
       />
       
       <BottomNav />
