@@ -22,7 +22,7 @@ const TopNav = () => {
           </Button>
           {!isMobile && (
             <Link to="/" className="text-xl font-bold text-primary">
-              NewsFlow
+              NewsReel
             </Link>
           )}
         </div>

@@ -18,13 +18,13 @@ const Profile = () => {
   );
   
   const [categories] = useState([
-    { id: 1, name: "Politics", enabled: true },
-    { id: 2, name: "Technology", enabled: true },
-    { id: 3, name: "Business", enabled: false },
-    { id: 4, name: "Sports", enabled: true },
-    { id: 5, name: "Entertainment", enabled: false },
-    { id: 6, name: "Science", enabled: true },
-    { id: 7, name: "Health", enabled: false },
+    { id: 1, name: "AI tools", enabled: true },
+    { id: 2, name: "AI in Business", enabled: true },
+    { id: 3, name: "AI in Social Media", enabled: false },
+    { id: 4, name: "AI Agents", enabled: true },
+    { id: 5, name: "AI in Robotics", enabled: false },
+    { id: 6, name: "AI Startups", enabled: true },
+    { id: 7, name: "AI in Home Appliances", enabled: false },
   ]);
   
   const [notifications] = useState([
@@ -51,8 +51,8 @@ const Profile = () => {
           <div className="h-24 w-24 rounded-full bg-primary/20 flex items-center justify-center text-3xl font-bold text-primary mb-4">
             U
           </div>
-          <h1 className="text-2xl font-bold">User Profile</h1>
-          <p className="text-muted-foreground">user@example.com</p>
+          <h1 className="text-2xl font-bold">Dhruvraj Zala</h1>
+          <p className="text-muted-foreground">dhruvrajzala4646@gmail.com</p>
         </div>
         
         <Tabs defaultValue="saved" className="w-full">
