@@ -5,48 +5,73 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 30% 96%;
+    --foreground: 222 47% 11%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 252 59% 48%;
+    --popover-foreground: 222 47% 11%;
+    
+    --primary: 201 100% 36%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
+    
+    --secondary: 249 100% 70%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    
+    --accent: 173 52% 44%;
+    --accent-foreground: 210 40% 98%;
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
+    
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --ring: 201 100% 36%;
+    
+    --radius: 0.75rem;
+    
+    /* Custom color tokens for the Zenith UI theme */
+    --zenith-primary: 201 100% 36%;       /* #0077B6 Deep Tech Blue */
+    --zenith-secondary: 245 100% 67%;     /* #6C63FF Soft Purple */
+    --zenith-background: 210 30% 96%;     /* #F5F7FA Light Grey-White */
+    --zenith-accent-teal: 173 52% 44%;    /* #32AFA9 Teal */
+    --zenith-accent-gold: 40 100% 50%;    /* #FFB400 Gold */
+    --zenith-dark: 216 12% 13%;           /* #1B1E24 Dark Mode */
   }
   
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 216 12% 13%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    
+    --card: 216 12% 13%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    
+    --popover: 216 12% 13%;
     --popover-foreground: 210 40% 98%;
-    --primary: 252 59% 54%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    
+    --primary: 201 100% 36%;
+    --primary-foreground: 222 47% 11%;
+    
+    --secondary: 245 100% 67%;
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 173 52% 44%;
     --accent-foreground: 210 40% 98%;
+    
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 201 100% 36%;
   }
 }
 
@@ -62,10 +87,13 @@
   }
 }
 
-/* Optimized scrolling */
+/* Enhanced performance scrolling */
 html, body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch; /* For iOS smooth scrolling */
 }
 
 /* Hide scrollbar for clean UI */
@@ -112,6 +140,17 @@ html, body {
   }
 }
 
+@keyframes slide-transition {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @keyframes pulse-wave {
   0% {
     transform: scaleY(0.5);
@@ -140,18 +179,27 @@ html, body {
   will-change: opacity, transform;
 }
 
+.animate-slide-transition {
+  animation: slide-transition 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
 .animate-pulse-wave {
   animation: pulse-wave 1.2s ease infinite;
   will-change: transform;
 }
 
-/* News reel with optimized styling */
+/* News reel with enhanced styling for performance */
 .news-reel {
   position: relative;
   height: 100vh;
   width: 100%;
   overflow: hidden;
   contain: strict;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .news-reel-image {
@@ -161,6 +209,7 @@ html, body {
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
   contain: strict;
+  transform: translateZ(0);
 }
 
 .news-reel-overlay {
@@ -188,30 +237,43 @@ html, body {
   bottom: 0;
   left: 0;
   height: 3px;
-  background-color: hsl(var(--primary));
+  background-color: hsl(var(--accent));
   transition: width 0.1s linear;
+  will-change: width;
 }
 
-/* Fixed action buttons - new style for permanent visibility */
-.fixed-action-buttons {
-  transform: translateX(0);
-  opacity: 1;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
+/* Fixed action buttons - improved style for permanent visibility */
+.action-buttons {
+  position: absolute;
+  right: 4%;
+  top: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 20;
+  transform: translateZ(0);
 }
 
 .action-button {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateX(0);
+  transform: translateZ(0);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, background-color;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
 }
 
 .action-button:hover {
-  transform: translateX(5px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Swipe indicators */
+/* Swipe indicators with improved performance */
 .swipe-indicator {
   position: absolute;
   display: flex;
@@ -225,6 +287,7 @@ html, body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .swipe-indicator:hover {
@@ -232,7 +295,7 @@ html, body {
   transform: scale(1.05);
 }
 
-/* Full article slide animations */
+/* Full article slide animations with improved performance */
 .news-full-article {
   position: fixed;
   top: 0;
@@ -244,9 +307,11 @@ html, body {
   overflow-y: auto;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+  transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
 }
 
-/* AI Assistant slide animations */
+/* AI Assistant slide animations with improved performance */
 .ai-assistant {
   position: fixed;
   top: 0;
@@ -260,12 +325,14 @@ html, body {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Hover effects with optimized performance */
 .hover-scale {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+  transform: translateZ(0);
 }
 
 .hover-scale:hover {
@@ -276,6 +343,7 @@ html, body {
 .card-hover {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, box-shadow;
+  transform: translateZ(0);
 }
 
 .card-hover:hover {
@@ -299,12 +367,13 @@ html, body {
   will-change: height;
 }
 
-/* Snap scrolling for reels */
+/* Enhanced snap scrolling for reels */
 .snap-container {
   scroll-snap-type: y mandatory;
   height: 100vh;
   overflow-y: scroll;
   overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .snap-center {
@@ -346,4 +415,108 @@ html, body {
   color: hsl(var(--primary));
   text-decoration: underline;
   font-weight: 500;
+}
+
+/* Improved comment section styling */
+.comment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+  will-change: opacity;
+}
+
+.comment-dialog {
+  background-color: hsl(var(--background));
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.3s ease;
+  will-change: transform, opacity;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.comment-dialog-content {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Improved reel container for smooth scrolling */
+.reel-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
+}
+
+.reel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.reel-item {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  position: relative;
+  will-change: transform;
+  overflow: hidden;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Improved responsive designs for mobile */
+@media (max-width: 640px) {
+  .action-buttons {
+    right: 16px;
+    top: 100px;
+  }
+  
+  .action-button {
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+  
+  .action-button span {
+    display: none;
+  }
 }

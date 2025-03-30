@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { NewsArticle } from "@/data/newsData";
-import { X, Facebook, Twitter, Linkedin, Mail, Link2, Copy, Share2 } from "lucide-react";
+import { X, Facebook, Twitter, Linkedin, Mail, Link2, Copy, Share2, Check } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -39,14 +39,14 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
   };
   
   return (
-    <div className="share-overlay">
-      <div className="share-dialog">
+    <div className="comment-overlay">
+      <div className="share-dialog animate-scale-in">
         <div className="p-4 border-b border-border flex justify-between items-center">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Share2 size={18} />
             Share Article
           </h3>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
             <X size={18} />
           </Button>
         </div>
@@ -58,7 +58,7 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <Button 
               variant="outline" 
-              className="flex flex-col items-center justify-center py-4 h-auto gap-2" 
+              className="flex flex-col items-center justify-center py-4 h-auto gap-2 hover:bg-blue-600/10 transition-colors" 
               onClick={() => handleShare("Facebook")}
             >
               <Facebook size={24} className="text-blue-600" />
@@ -67,7 +67,7 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
             
             <Button 
               variant="outline" 
-              className="flex flex-col items-center justify-center py-4 h-auto gap-2" 
+              className="flex flex-col items-center justify-center py-4 h-auto gap-2 hover:bg-sky-500/10 transition-colors" 
               onClick={() => handleShare("Twitter")}
             >
               <Twitter size={24} className="text-sky-500" />
@@ -76,7 +76,7 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
             
             <Button 
               variant="outline" 
-              className="flex flex-col items-center justify-center py-4 h-auto gap-2" 
+              className="flex flex-col items-center justify-center py-4 h-auto gap-2 hover:bg-blue-800/10 transition-colors" 
               onClick={() => handleShare("LinkedIn")}
             >
               <Linkedin size={24} className="text-blue-800" />
@@ -85,7 +85,7 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
             
             <Button 
               variant="outline" 
-              className="flex flex-col items-center justify-center py-4 h-auto gap-2" 
+              className="flex flex-col items-center justify-center py-4 h-auto gap-2 hover:bg-red-500/10 transition-colors" 
               onClick={() => handleShare("Email")}
             >
               <Mail size={24} className="text-red-500" />
@@ -101,34 +101,18 @@ export const ShareDialog = ({ article, onClose }: ShareDialogProps) => {
               variant="ghost" 
               size="sm" 
               onClick={handleCopyLink}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 hover:bg-[#0077B6]/10"
             >
-              {copied ? <Check size={14} /> : <Copy size={14} />}
+              {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
               <span className="text-xs">{copied ? "Copied" : "Copy"}</span>
             </Button>
           </div>
+          
+          <p className="text-xs text-muted-foreground text-center">
+            By sharing this article, you're helping spread knowledge and insights on {article.category}
+          </p>
         </div>
       </div>
     </div>
   );
 };
-
-// Missing icon import
-function Check(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}

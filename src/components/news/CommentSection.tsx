@@ -5,6 +5,7 @@ import { NewsArticle } from "@/data/newsData";
 import { X, Send, ThumbsUp } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CommentSectionProps {
   article: NewsArticle;
@@ -72,92 +73,104 @@ export const CommentSection = ({ article, onClose }: CommentSectionProps) => {
     <div className="comment-overlay">
       <div className="comment-dialog">
         <div className="p-4 border-b border-border flex justify-between items-center">
-          <h3 className="text-lg font-bold">Comments ({comments.length})</h3>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            Comments ({comments.length})
+          </h3>
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
             <X size={18} />
           </Button>
         </div>
         
-        <div className="p-4 max-h-[60vh] overflow-y-auto">
-          {comments.map((comment) => (
-            <div key={comment.id} className="mb-6">
-              <div className="flex items-start gap-3">
-                <Avatar>
-                  <AvatarImage src={comment.authorImage} alt={comment.author} />
-                  <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="bg-muted/30 p-3 rounded-lg">
-                    <div className="flex justify-between items-center mb-1">
-                      <h4 className="font-medium">{comment.author}</h4>
-                      <span className="text-xs text-muted-foreground">{comment.date}</span>
+        <ScrollArea className="flex-1 max-h-[60vh]">
+          <div className="p-4">
+            {comments.map((comment) => (
+              <div key={comment.id} className="mb-6">
+                <div className="flex items-start gap-3">
+                  <Avatar>
+                    <AvatarImage src={comment.authorImage} alt={comment.author} />
+                    <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="bg-[#0077B6]/10 p-3 rounded-lg">
+                      <div className="flex justify-between items-center mb-1">
+                        <h4 className="font-medium">{comment.author}</h4>
+                        <span className="text-xs text-muted-foreground">{comment.date}</span>
+                      </div>
+                      <p className="text-sm">{comment.text}</p>
                     </div>
-                    <p className="text-sm">{comment.text}</p>
-                  </div>
-                  <div className="flex gap-4 mt-2 ml-2">
-                    <button className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <ThumbsUp size={14} /> {comment.likes}
-                    </button>
-                    <button className="text-xs text-muted-foreground hover:text-primary transition-colors">
-                      Reply
-                    </button>
+                    <div className="flex gap-4 mt-2 ml-2">
+                      <button 
+                        className="text-xs text-muted-foreground flex items-center gap-1 hover:text-[#0077B6] transition-colors"
+                      >
+                        <ThumbsUp size={14} /> {comment.likes}
+                      </button>
+                      <button 
+                        className="text-xs text-muted-foreground hover:text-[#0077B6] transition-colors"
+                      >
+                        Reply
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Replies */}
-              {comment.replies && comment.replies.length > 0 && (
-                <div className="ml-12 mt-3">
-                  {comment.replies.map((reply) => (
-                    <div key={reply.id} className="flex items-start gap-3 mb-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={reply.authorImage} alt={reply.author} />
-                        <AvatarFallback>{reply.author.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="bg-muted/20 p-2 rounded-lg">
-                          <div className="flex justify-between items-center mb-1">
-                            <h4 className="font-medium text-sm">{reply.author}</h4>
-                            <span className="text-xs text-muted-foreground">{reply.date}</span>
+                
+                {/* Replies */}
+                {comment.replies && comment.replies.length > 0 && (
+                  <div className="ml-12 mt-3">
+                    {comment.replies.map((reply) => (
+                      <div key={reply.id} className="flex items-start gap-3 mb-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={reply.authorImage} alt={reply.author} />
+                          <AvatarFallback>{reply.author.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="bg-[#6C63FF]/10 p-2 rounded-lg">
+                            <div className="flex justify-between items-center mb-1">
+                              <h4 className="font-medium text-sm">{reply.author}</h4>
+                              <span className="text-xs text-muted-foreground">{reply.date}</span>
+                            </div>
+                            <p className="text-xs">{reply.text}</p>
                           </div>
-                          <p className="text-xs">{reply.text}</p>
-                        </div>
-                        <div className="flex gap-4 mt-1 ml-2">
-                          <button className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                            <ThumbsUp size={12} /> {reply.likes}
-                          </button>
+                          <div className="flex gap-4 mt-1 ml-2">
+                            <button 
+                              className="text-xs text-muted-foreground flex items-center gap-1 hover:text-[#0077B6] transition-colors"
+                            >
+                              <ThumbsUp size={12} /> {reply.likes}
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
         
         <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
+          <div className="flex items-start gap-2">
+            <Avatar className="h-8 w-8 mt-2">
               <AvatarImage src="https://i.pravatar.cc/100?img=5" alt="You" />
               <AvatarFallback>Y</AvatarFallback>
             </Avatar>
-            <Textarea
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[80px] resize-none"
-            />
-          </div>
-          <div className="flex justify-end mt-2">
-            <Button 
-              onClick={handleSubmitComment}
-              disabled={!newComment.trim()}
-              className="flex items-center gap-2"
-            >
-              <Send size={16} />
-              Comment
-            </Button>
+            <div className="flex-1">
+              <Textarea
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="min-h-[80px] resize-none mb-2"
+              />
+              <div className="flex justify-end">
+                <Button 
+                  onClick={handleSubmitComment}
+                  disabled={!newComment.trim()}
+                  className="flex items-center gap-2 bg-[#0077B6] hover:bg-[#0077B6]/90"
+                >
+                  <Send size={16} />
+                  Comment
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
