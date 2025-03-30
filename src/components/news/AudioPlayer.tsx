@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, Volume2, Volume1, VolumeX, SkipForward, SkipBack } from "lucide-react";
+import { Play, Pause, Volume2, Volume1, VolumeX, SkipForward, SkipBack, X, Minimize2, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { NewsArticle } from "@/data/newsData";
@@ -55,6 +55,8 @@ const AudioPlayer = ({
       }, 150);
     } else {
       clearInterval(waveformInterval.current || undefined);
+      // Set a static waveform when paused
+      setWaveform(Array.from({ length: 20 }, () => Math.floor(Math.random() * 50) + 10));
     }
     
     return () => {
@@ -126,32 +128,32 @@ const AudioPlayer = ({
   // Mini player at the bottom of the screen
   if (isMinimized) {
     return (
-      <div className="fixed bottom-16 left-0 right-0 bg-card border-t border-border shadow-lg z-40 animate-slide-in-up">
+      <div className="fixed bottom-16 left-0 right-0 bg-news-primary text-white shadow-lg z-40 animate-slide-in-up audio-player-minimized">
         <div className="flex items-center justify-between p-3">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-8 w-8 rounded-full bg-primary text-primary-foreground"
+              className="h-8 w-8 rounded-full bg-white/15 hover:bg-white/25 text-white"
               onClick={togglePlay}
             >
               {isPlaying ? <Pause size={14} /> : <Play size={14} />}
             </Button>
             
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium truncate">{article.title}</p>
+              <p className="text-sm font-medium truncate text-white">{article.title}</p>
               <div className="flex space-x-2 items-center">
-                <p className="text-xs text-muted-foreground">{voiceType} voice • {speed} speed</p>
+                <p className="text-xs text-white/70">{voiceType} voice • {speed} speed</p>
                 <div className="flex space-x-1">
                   {waveform.slice(0, 8).map((height, i) => (
                     <div 
                       key={i}
                       className={cn(
-                        "w-0.5 bg-primary rounded-full",
+                        "w-0.5 bg-white rounded-full",
                         isPlaying ? "animate-pulse" : ""
                       )}
                       style={{ 
-                        height: `${Math.max(3, height * 0.1)}px`,
+                        height: `${Math.max(3, height * 0.08)}px`,
                         opacity: isPlaying ? 1 : 0.5
                       }}
                     />
@@ -165,26 +167,26 @@ const AudioPlayer = ({
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-7 w-7 rounded-full hover:bg-muted"
+              className="h-7 w-7 rounded-full hover:bg-white/20 text-white"
               onClick={onMaximize}
             >
-              <SkipForward size={14} className="rotate-90" />
+              <Maximize2 size={14} />
             </Button>
             
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-7 w-7 rounded-full hover:bg-muted text-muted-foreground"
+              className="h-7 w-7 rounded-full hover:bg-white/20 text-white"
               onClick={onClose}
             >
-              <SkipForward size={14} className="-rotate-90" />
+              <X size={14} />
             </Button>
           </div>
         </div>
         
-        <div className="h-1 bg-muted w-full relative">
+        <div className="h-1 bg-white/20 w-full relative">
           <div 
-            className="absolute top-0 left-0 h-full bg-primary transition-all duration-100"
+            className="absolute top-0 left-0 h-full bg-white transition-all duration-100"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -192,49 +194,62 @@ const AudioPlayer = ({
     );
   }
   
-  // Full player
+  // Full player with improved UI
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-lg z-40 transition-all duration-300 ease-in-out",
-      isOpen ? "translate-y-0" : "translate-y-full"
+      "fixed bottom-0 left-0 right-0 audio-player transition-all duration-300 ease-in-out z-40",
+      isOpen ? "translate-y-0" : "translate-y-full",
+      "bg-gradient-to-br from-news-primary to-news-secondary text-white"
     )}>
       <div className="container max-w-3xl mx-auto p-4 pb-20">
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-lg truncate pr-4">{article.title}</h3>
+            <h3 className="font-semibold text-lg truncate pr-4 text-white">{article.title}</h3>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" onClick={onMinimize}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onMinimize}
+                className="text-white hover:bg-white/10"
+              >
+                <Minimize2 size={16} className="mr-1" />
                 Minimize
               </Button>
-              <Button variant="outline" size="sm" onClick={onClose}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onClose}
+                className="text-white hover:bg-white/10"
+              >
+                <X size={16} className="mr-1" />
                 Close
               </Button>
             </div>
           </div>
           
-          <div className="flex justify-center my-4">
-            <div className="flex space-x-1 h-20 items-end px-2">
+          <div className="flex justify-center my-6">
+            <div className="audio-waveform flex space-x-1 items-end px-2">
               {waveform.map((height, i) => (
                 <div 
                   key={i}
                   className={cn(
-                    "w-1.5 bg-primary rounded-full mx-0.5 transition-all duration-150",
+                    "waveform-bar mx-0.5 transition-all duration-150 rounded-full bg-white/80",
                     isPlaying ? "animate-pulse" : ""
                   )}
                   style={{ 
-                    height: `${height}%`,
-                    opacity: isPlaying ? 1 : 0.5
+                    height: `${height * 0.4}px`,
+                    opacity: isPlaying ? 0.8 : 0.4
                   }}
                 />
               ))}
             </div>
           </div>
           
-          <div className="flex space-x-4 items-center">
+          <div className="flex space-x-4 items-center bg-white/10 p-4 rounded-xl">
             <Button 
-              variant="outline" 
+              variant="ghost" 
               size="icon" 
-              className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="h-12 w-12 rounded-full bg-white/15 hover:bg-white/25 text-white"
               onClick={togglePlay}
             >
               {isPlaying ? <Pause size={24} /> : <Play size={24} />}
@@ -249,7 +264,7 @@ const AudioPlayer = ({
                 onValueChange={handleProgressChange}
                 className="my-4"
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
+              <div className="flex justify-between text-xs text-white/70">
                 <span>
                   {Math.floor(progress / 100 * 60)}:{String(Math.floor((progress / 100 * 60) % 1 * 60)).padStart(2, '0')}
                 </span>
@@ -263,7 +278,7 @@ const AudioPlayer = ({
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 rounded-full hover:bg-muted"
+                className="h-8 w-8 rounded-full hover:bg-white/20 text-white"
                 onClick={toggleMute}
               >
                 <VolumeIcon size={18} />
@@ -280,10 +295,10 @@ const AudioPlayer = ({
           </div>
           
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">Voice</label>
+            <div className="bg-white/10 rounded-lg p-3">
+              <label className="text-sm font-medium mb-1 block text-white/80">Voice</label>
               <Select value={voiceType} onValueChange={(v) => setVoiceType(v as VoiceType)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white">
                   <SelectValue placeholder="Select voice" />
                 </SelectTrigger>
                 <SelectContent>
@@ -294,10 +309,10 @@ const AudioPlayer = ({
               </Select>
             </div>
             
-            <div>
-              <label className="text-sm font-medium mb-1 block">Speed</label>
+            <div className="bg-white/10 rounded-lg p-3">
+              <label className="text-sm font-medium mb-1 block text-white/80">Speed</label>
               <Select value={speed} onValueChange={(v) => setSpeed(v as SpeedType)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white">
                   <SelectValue placeholder="Select speed" />
                 </SelectTrigger>
                 <SelectContent>

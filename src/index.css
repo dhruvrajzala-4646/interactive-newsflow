@@ -93,10 +93,12 @@
   }
 
   body {
-    @apply bg-background text-foreground overflow-hidden;
+    @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Remove overflow-hidden to allow scrolling on the entire page */
   }
 
+  /* News reel styling with improved scrolling */
   .news-reel {
     height: 100vh;
     width: 100vw;
@@ -200,7 +202,7 @@
     height: 100vh;
     width: 100vw;
     position: relative;
-    overflow: hidden scroll;
+    overflow-y: auto; /* Changed from 'hidden scroll' to 'auto' for better scrolling */
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -219,14 +221,14 @@
     scroll-snap-stop: always;
     position: relative;
     will-change: transform;
+    overflow: hidden; /* Ensure content doesn't overflow */
   }
   
-  /* Action buttons styling */
+  /* Updated action buttons styling - positioned at top right */
   .action-buttons {
     position: absolute;
-    left: 4%;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 4%;
+    top: 25%; /* Positioned higher on the screen */
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -237,20 +239,22 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     color: white;
     padding: 12px 16px;
     border-radius: 12px;
     font-weight: 500;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
   }
   
   .action-button:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    transform: translateX(3px);
+    background-color: rgba(0, 119, 182, 0.8); /* Using primary color */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
   }
   
   /* Smooth content transitions */
@@ -277,4 +281,100 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
+  /* Comment dialog styling */
+  .comment-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .comment-dialog {
+    background-color: hsl(var(--background));
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.3s ease;
+  }
+
+  /* Share dialog styling */
+  .share-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .share-dialog {
+    background-color: hsl(var(--background));
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.3s ease;
+  }
+
+  /* Improved audio player styling */
+  .audio-player {
+    background-color: hsl(var(--card));
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .audio-player-minimized {
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .audio-waveform {
+    display: flex;
+    align-items: flex-end;
+    height: 40px;
+    gap: 2px;
+  }
+
+  .waveform-bar {
+    background-color: hsl(var(--primary));
+    width: 3px;
+    border-radius: 3px;
+    transition: height 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
 }
+

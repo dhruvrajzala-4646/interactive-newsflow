@@ -8,12 +8,14 @@ import NewsReel from "@/components/news/NewsReel";
 import FullArticle from "@/components/news/FullArticle";
 import AiAssistant from "@/components/news/AiAssistant";
 import AudioPlayer from "@/components/news/AudioPlayer";
+import { CommentSection } from "@/components/news/CommentSection";
+import { ShareDialog } from "@/components/news/ShareDialog";
 
 const Index = () => {
   const { toast } = useToast();
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Make sure we have at least 5 articles by duplicating if needed
   const [articles, setArticles] = useState<NewsArticle[]>(
-    // Make sure we have at least 5 articles
     newsData.length >= 5
       ? newsData
       : [
@@ -24,63 +26,37 @@ const Index = () => {
   const [showArticle, setShowArticle] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
   const [audioPlayerOpen, setAudioPlayerOpen] = useState(false);
   const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(false);
   const [playingArticle, setPlayingArticle] = useState<NewsArticle | null>(null);
+  const [showComments, setShowComments] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const reelsRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Optimized wheel handling for desktop with improved performance
+  // Detect scroll direction for better UX
   useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      
-      if (isScrolling) return;
-      
-      const delta = Math.abs(e.deltaY);
-      if (delta < 10) return; // Ignore small scrolls for better user experience
-      
-      setIsScrolling(true);
-      
+    const handleScroll = (e: WheelEvent) => {
       if (e.deltaY > 0) {
-        // Going down
+        // Scrolling down
         if (currentIndex < articles.length - 1) {
           setCurrentIndex(prev => prev + 1);
         }
-      } else {
-        // Going up
+      } else if (e.deltaY < 0) {
+        // Scrolling up
         if (currentIndex > 0) {
           setCurrentIndex(prev => prev - 1);
         }
       }
-      
-      // Add a delay before allowing another scroll
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 600); // Longer timeout for smoother scrolling experience
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false });
-    }
-
+    // Add scroll listener to window for better scroll detection
+    window.addEventListener('wheel', handleScroll);
     return () => {
-      if (container) {
-        container.removeEventListener('wheel', handleWheel);
-      }
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
+      window.removeEventListener('wheel', handleScroll);
     };
-  }, [currentIndex, articles.length, isScrolling]);
+  }, [currentIndex, articles.length]);
 
   // Optimized touch handling for mobile with improved performance
   useEffect(() => {
@@ -91,20 +67,12 @@ const Index = () => {
       touchStartY = e.touches[0].clientY;
     };
     
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isScrolling) {
-        e.preventDefault();
-      }
-    };
-    
     const handleTouchEnd = (e: TouchEvent) => {
       touchEndY = e.changedTouches[0].clientY;
       
       const deltaY = touchStartY - touchEndY;
       
       if (Math.abs(deltaY) < 50) return; // Require more significant swipe
-      
-      setIsScrolling(true);
       
       if (deltaY > 0) {
         // Swipe Up - go to next
@@ -117,32 +85,17 @@ const Index = () => {
           setCurrentIndex(prev => prev - 1);
         }
       }
-      
-      // Add a delay before allowing another swipe
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 600);
     };
     
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('touchstart', handleTouchStart, { passive: true });
-      container.addEventListener('touchmove', handleTouchMove, { passive: false });
-      container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    }
+    // Add touch listeners to window for better touch detection
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     
     return () => {
-      if (container) {
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchmove', handleTouchMove);
-        container.removeEventListener('touchend', handleTouchEnd);
-      }
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [currentIndex, articles.length, isScrolling]);
+  }, [currentIndex, articles.length]);
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
@@ -163,18 +116,20 @@ const Index = () => {
   }, [articles, toast]);
 
   const handleComment = useCallback((id: number) => {
-    toast({
-      title: "Comments",
-      description: "Comments section would open here",
-    });
-  }, [toast]);
+    const article = articles.find(a => a.id === id);
+    if (article) {
+      setSelectedArticle(article);
+      setShowComments(true);
+    }
+  }, [articles]);
 
   const handleShare = useCallback((id: number) => {
-    toast({
-      title: "Share",
-      description: "Share options would appear here",
-    });
-  }, [toast]);
+    const article = articles.find(a => a.id === id);
+    if (article) {
+      setSelectedArticle(article);
+      setShowShare(true);
+    }
+  }, [articles]);
 
   const handleSave = useCallback((id: number) => {
     setArticles((prevArticles) =>
@@ -252,7 +207,7 @@ const Index = () => {
       
       {/* Main Feed with improved scrolling */}
       <div className="h-full w-full pt-16 pb-16 reel-container" ref={reelsRef}>
-        {articles.slice(0, 5).map((article, index) => (
+        {articles.map((article, index) => (
           <div 
             key={article.id}
             className={`w-full h-full ${index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
@@ -282,7 +237,7 @@ const Index = () => {
         ))}
       </div>
 
-      {/* Previous/Next Navigation Indicators */}
+      {/* Navigation Indicators */}
       {currentIndex > 0 && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-16 z-20 opacity-30 text-white text-sm font-medium">
           <span>⬆️ Swipe up for previous story</span>
@@ -295,7 +250,23 @@ const Index = () => {
         </div>
       )}
       
-      {/* Fullscreen Article (slide from right) */}
+      {/* Comments Dialog */}
+      {showComments && selectedArticle && (
+        <CommentSection 
+          article={selectedArticle}
+          onClose={() => setShowComments(false)}
+        />
+      )}
+      
+      {/* Share Dialog */}
+      {showShare && selectedArticle && (
+        <ShareDialog
+          article={selectedArticle}
+          onClose={() => setShowShare(false)}
+        />
+      )}
+      
+      {/* Fullscreen Article */}
       <FullArticle
         article={selectedArticle}
         isOpen={showArticle}
@@ -308,7 +279,7 @@ const Index = () => {
         relatedArticles={relatedArticles}
       />
       
-      {/* AI Assistant (popup modal) */}
+      {/* AI Assistant */}
       <AiAssistant
         isOpen={showAssistant}
         onClose={closeAssistant}

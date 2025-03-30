@@ -41,7 +41,7 @@ const NewsReel = ({
     onSwipedRight: () => onSwipeRight(),
     onSwipedUp: () => setShowSmartSummary(true),
     onSwipedDown: () => setShowSmartSummary(false),
-    preventScrollOnSwipe: true,
+    preventScrollOnSwipe: false, // Changed to false to allow scrolling
     trackMouse: true
   });
 
@@ -85,7 +85,7 @@ const NewsReel = ({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       
-      {/* Permanently Visible Action Buttons - Correctly positioned on left side */}
+      {/* Permanently Visible Action Buttons - Repositioned to top right */}
       <div className="action-buttons">
         <Button 
           onClick={() => onSwipeLeft(article)}
