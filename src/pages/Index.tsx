@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { newsData, NewsArticle } from "@/data/newsData";
@@ -139,34 +138,33 @@ const Index = () => {
     }, 500);
   }, []);
 
-  // Optimized wheel event handler using requestAnimationFrame
+  // Ensure smooth scrolling using requestAnimationFrame
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault(); // Prevent default to take control of scrolling
-      
+      e.preventDefault(); // Prevent default scrolling behavior
+
       if (isScrolling.current) return;
-      
+
       requestAnimationFrame(() => {
-        if (e.deltaY > 20) { // Threshold to prevent accidental scrolls
-          // Scrolling down
+        if (e.deltaY > 20) {
+          // Scroll down
           if (currentIndex < articles.length - 1) {
             smoothScrollToIndex(currentIndex + 1);
           }
         } else if (e.deltaY < -20) {
-          // Scrolling up
+          // Scroll up
           if (currentIndex > 0) {
             smoothScrollToIndex(currentIndex - 1);
           }
         }
       });
     };
-    
-    // Attach wheel event listener to the reels container
+
     const reelsElement = reelsRef.current;
     if (reelsElement) {
       reelsElement.addEventListener('wheel', handleWheel, { passive: false });
     }
-    
+
     return () => {
       if (reelsElement) {
         reelsElement.removeEventListener('wheel', handleWheel);
@@ -326,7 +324,7 @@ const Index = () => {
   }, [selectedArticle, articles]);
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-background will-change-transform" ref={containerRef}>
+    <div className="flex flex-col min-h-screen w-screen overflow-hidden bg-background" ref={containerRef}>
       <TopNav />
       
       {/* Main Feed with improved scrolling */}

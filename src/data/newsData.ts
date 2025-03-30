@@ -19,21 +19,13 @@ export interface NewsArticle {
 export const newsData: NewsArticle[] = [
   {
     id: 1,
-    title: "Global Climate Summit Ends with Historic Agreement",
-    summary: "World leaders reach unprecedented consensus on carbon reduction targets, pledging a 50% cut by 2030.",
-    content: `<p>In a landmark decision that surprised many observers, the Global Climate Summit concluded yesterday with all 196 participating nations signing the most ambitious climate agreement to date. The accord, dubbed "The New Climate Charter," commits signatories to reduce carbon emissions by 50% before 2030 and achieve carbon neutrality by 2050.</p>
-    
-    <p>"This is truly a historic moment," said UN Secretary-General Antonio Guterres. "For the first time, we are seeing genuine consensus and commitment from both developed and developing nations."</p>
-    
-    <p>The agreement includes substantial financial commitments from wealthy nations, with a pledged $100 billion annual fund to help developing countries transition to renewable energy sources. Additionally, the agreement establishes an independent monitoring body that will track progress and ensure accountability.</p>
-    
-    <p>Climate activists have cautiously welcomed the agreement, though many emphasize that implementation will be the true test. "The targets are ambitious, which is what science demands," said Greta Thunberg. "But now we need to see action, not just promises."</p>
-    
-    <p>Markets reacted positively to the news, with renewable energy stocks surging and fossil fuel companies seeing significant drops in share prices. Analysts predict this agreement will accelerate the already rapid growth in green technology investment.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3",
-    category: "Environment",
+    title: "OpenAI’s Ghibli-Style AI Art Sparks Creativity—And Controversy",
+    summary: "OpenAI’s new AI image tool transforms photos into stunning Studio Ghibli-style art. But with copyright concerns and artists raising ethical questions, is this the future of creativity or a lawsuit waiting to happen?",
+    content:  "OpenAI’s latest AI-powered image tool has revolutionized the way people create art, allowing users to transform any photo into breathtaking Studio Ghibli-style artwork. The tool, built into OpenAI’s DALL·E image generator, applies advanced machine learning techniques to produce visuals that resemble the signature hand-drawn, soft-color aesthetic of classic Ghibli films such as My Neighbor Totoro and Spirited Away. Social media has exploded with users sharing their AI-generated Ghibli-style artwork, with many calling it 'magical' and 'beyond imagination.' From anime lovers to professional designers, people are experimenting with this technology to see just how well AI can capture the feeling of traditional Japanese animation. However, this surge in AI-generated Ghibli-style images has triggered major ethical and legal concerns. Many artists argue that AI-generated art often relies on training data derived from human-made works, raising questions about whether AI is effectively 'stealing' artistic styles without consent. Critics argue that OpenAI's model, while impressive, still lacks the true creativity and soul of a human artist. Digital artist Yuki Tanaka expressed frustration, saying, 'This AI is generating work that closely resembles a style that took decades to develop. If it’s not directly copying, it’s certainly imitating in a way that threatens original artists.' The controversy doesn’t stop there. Some legal experts believe that OpenAI’s latest tool could lead to lawsuits from major animation studios, including Studio Ghibli itself, which has a reputation for being protective over its artistic legacy. While AI companies insist their models are trained on publicly available data and are not infringing copyright, legal battles around AI-generated content are still a grey area. There is currently no clear precedent on how courts will handle AI-generated art that mimics an established artistic style without direct permission. Meanwhile, OpenAI defends its tool by arguing that AI doesn’t 'copy' but rather learns patterns and artistic elements from vast amounts of data, generating entirely new compositions. Some believe this AI-driven technology could be a game-changer for businesses, content creators, and marketers. Companies are already experimenting with using AI-generated Ghibli-style artwork for branding, advertising, and digital storytelling. Video creators are using it to add a unique aesthetic to short films and animations, while some indie game developers have begun exploring AI-enhanced visuals for their projects. Despite the backlash, it is undeniable that AI-generated art is here to stay. The technology is rapidly improving, and as more users embrace AI tools for creative projects, debates around ethics, ownership, and legality will only intensify. Whether this marks the beginning of a new digital art revolution or a massive legal showdown, one thing is clear—AI’s ability to create visually stunning, Ghibli-inspired artwork has captivated the internet like never before.",
+    imageUrl: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Foomgwb8pz1if0lun1wbt.jpg",
+    category: "AI Tool",
     author: "Sarah Johnson",
-    date: "2023-11-15",
+    date: "2025-03-30",
     likes: 1543,
     comments: 284,
     saved: false,
@@ -43,21 +35,13 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 2,
-    title: "Revolutionary AI System Can Predict Protein Structures with 98% Accuracy",
-    summary: "DeepMind's new AlphaFold 3 breakthrough promises to transform drug discovery and biological research.",
-    content: `<p>DeepMind, the AI research lab owned by Google parent company Alphabet, has announced a breakthrough in protein structure prediction that scientists are calling "transformative" for biological research and drug development.</p>
-    
-    <p>The new system, AlphaFold 3, can predict the three-dimensional shape of proteins with an unprecedented 98% accuracy, a significant improvement over its predecessor which already revolutionized the field two years ago.</p>
-    
-    <p>"This is a quantum leap forward," said Dr. Emma Richardson, a computational biologist at Stanford University who wasn't involved in the research. "Protein folding has been a grand challenge in biology for decades. With this level of accuracy, we can now confidently model virtually any protein in the human body or in pathogens."</p>
-    
-    <p>Understanding protein structures is crucial for drug development and biological research, as a protein's shape determines its function. Traditionally, determining these structures required months or years of laboratory work.</p>
-    
-    <p>DeepMind has announced it will make AlphaFold 3 available to the scientific community, potentially accelerating research across multiple fields. Several pharmaceutical companies have already announced plans to incorporate the technology into their drug discovery pipelines.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3",
-    category: "Technology",
+    title: "H&M Uses AI-Generated Models – Fashion’s Future or a Big Mistake?",
+    summary: "H&M has started using AI-generated models to showcase clothing on its website, sparking both excitement and controversy. Supporters argue that AI models can improve diversity, save costs, and streamline production, but critics worry about job losses for real models and the potential for misleading advertising. Some also raise ethical concerns about AI-generated bodies setting unrealistic beauty standards. As AI continues to disrupt the fashion industry, the question remains: Is this the future of online retail, or is H&M making a critical mistake?",
+    content: "H&M has taken a bold step into the future of fashion by introducing AI-generated models to display clothing on its website. Instead of using real models for every photoshoot, the company now employs artificial intelligence to create lifelike images of people wearing H&M apparel. This AI-driven approach allows for faster content production, cost savings, and the ability to generate diverse-looking models without the need for large-scale photoshoots. While some see this as a technological breakthrough, others believe it could have serious consequences for the fashion industry. Supporters argue that AI-generated models can increase representation by allowing brands to create a wider range of body types, skin tones, and facial features. Additionally, AI eliminates the need for expensive model hiring and studio photoshoots, making fashion campaigns more cost-effective. However, critics worry that replacing real models with AI-generated ones could lead to widespread job losses in the modeling industry. Many also express concerns that AI-generated images could set unrealistic beauty standards, just as photoshopped models have in the past. AI models can be manipulated to create 'perfect' features, which might negatively impact self-esteem and body image among consumers. Another major concern is transparency. If retailers like H&M do not clearly label AI-generated models, customers may feel misled about how clothing will actually look on real people. The lack of real-world lighting, body movement, and texture variations could result in buyers receiving products that don't match their expectations. Fashion experts predict that AI-generated models will soon become standard in e-commerce, but brands will need to find a balance between technology and authenticity. Some suggest that a hybrid approach—using both AI and real models—could be the solution. Whether H&M’s move is a glimpse into the future or a misstep remains to be seen, but one thing is certain: AI is rapidly reshaping the way fashion is marketed, and other brands will likely follow in its footsteps.",
+    imageUrl: "https://www.businessoffashion.com/resizer/v2/G4SOKW6R5ZGD7OECXUXGBCEOHE.jpg?auth=b43d26ace108b3923ac93ba9ed9b59eb67834702705dc2209031cae8f22578ab",
+    category: "AI in Business",
     author: "Michael Chen",
-    date: "2023-11-14",
+    date: "2025-03-30",
     likes: 3287,
     comments: 413,
     saved: true,
@@ -67,21 +51,13 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 3,
-    title: "Crypto Market Surges as US Approves First Bitcoin ETF",
-    summary: "Bitcoin hits all-time high following SEC approval of spot Bitcoin ETFs, opening cryptocurrency to mainstream investors.",
-    content: `<p>The cryptocurrency market experienced a historic surge today after the U.S. Securities and Exchange Commission (SEC) approved the first spot Bitcoin exchange-traded funds (ETFs), ending a decade-long wait and potentially opening cryptocurrency to millions of mainstream investors.</p>
-    
-    <p>Bitcoin immediately responded by climbing to an all-time high of $88,000, a 15% increase in just 24 hours. Other cryptocurrencies followed suit, with Ethereum up 12% and the total cryptocurrency market capitalization crossing $3 trillion for the first time.</p>
-    
-    <p>"This is the legitimization that the crypto industry has been waiting for," said Cathie Wood, CEO of Ark Invest, one of the firms that received approval for its Bitcoin ETF application. "It signals that cryptocurrency has matured as an asset class."</p>
-    
-    <p>The approved ETFs will begin trading next week on the NYSE and Nasdaq, allowing investors to gain exposure to Bitcoin without directly purchasing and storing the digital asset. Analysts predict this could bring a flood of institutional money into the cryptocurrency market.</p>
-    
-    <p>The decision represents a significant shift in the SEC's stance toward cryptocurrency under new leadership. Previously, the commission had rejected numerous Bitcoin ETF applications, citing concerns about market manipulation and investor protection.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3",
-    category: "Finance",
+    title: "AI Humanoid Robots Are Here – And They Want Your Job",
+    summary: "A Chinese startup has unveiled AI-powered humanoid robots designed to work in luxury car factories, marking a major step in automation. These robots are equipped with advanced AI that allows them to learn and adapt like human workers, sparking concerns about job displacement. While businesses see potential cost savings and efficiency gains, critics warn of mass unemployment and ethical challenges. As humanoid robots become more capable, are we witnessing the future of manufacturing—or the beginning of a new labor crisis?",
+    content: "A Chinese robotics startup has made headlines by developing highly advanced AI-powered humanoid robots for luxury car factories. Unlike traditional industrial robots, these humanoid machines are designed to perform tasks previously exclusive to human workers, such as assembling delicate components and even learning new skills through artificial intelligence. The company claims these robots can improve efficiency and reduce manufacturing costs, making them an attractive investment for major automakers. But not everyone is celebrating. Labor unions and workers' rights activists warn that the rise of humanoid robots could lead to massive job losses. The fear is that AI-powered automation will eventually replace human employees, leaving millions of factory workers unemployed. Some experts argue that while automation has historically created new types of jobs, humanoid robots are different because they can perform a wider range of tasks that were once thought to be uniquely human. Businesses, on the other hand, see a major opportunity. Automakers are under pressure to cut costs and increase production speed, and AI-powered robots offer a solution. These machines don’t need breaks, don’t demand wages, and can work 24/7 without fatigue. For industries facing labor shortages, humanoid robots could provide a much-needed workforce solution. However, ethical concerns remain. Some critics worry that widespread robot adoption could create a social divide, where only highly skilled tech workers remain employed while others struggle to find work. Additionally, questions about how these robots should be regulated and taxed are still unresolved. If companies replace human workers with AI, should they still pay the same labor taxes? As AI humanoid robots continue to advance, this debate will only intensify. Are we entering a new era of technological progress, or are we heading toward a labor crisis? The answer may determine the future of work itself.",
+    imageUrl: "https://i.ytimg.com/vi/sgo-jF4j8g8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLD8Ghn0UKMXY4dNjfqChVYo6yaVEg",
+    category: "AI Robotics",
     author: "Jason Rodriguez",
-    date: "2023-11-13",
+    date: "2025-03-30",
     likes: 2186,
     comments: 597,
     saved: false,
@@ -91,19 +67,11 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 4,
-    title: "NASA Announces 2026 Mission to Investigate Signs of Microbial Life on Europa",
-    summary: "The Europa Clipper mission will explore Jupiter's moon, focusing on potential habitable conditions beneath its icy surface.",
-    content: `<p>NASA has confirmed plans for an ambitious mission to Jupiter's moon Europa, scheduled for launch in 2026. The mission, named Europa Clipper, will investigate the icy moon's potential to harbor life within its subsurface ocean.</p>
-    
-    <p>"Europa is one of our best chances to find life elsewhere in our solar system," said Dr. Robert Pappalardo, the mission's project scientist. "We have strong evidence suggesting a vast ocean beneath its frozen surface, containing more water than all of Earth's oceans combined."</p>
-    
-    <p>The spacecraft will carry nine specialized instruments designed to investigate Europa's composition, the thickness of its ice shell, and the characteristics of its ocean. Of particular interest are the plumes of water vapor that previous observations have detected erupting from the moon's surface, which could provide direct samples of the subsurface ocean without having to drill through miles of ice.</p>
-    
-    <p>Recent analyses of these plumes have shown the presence of complex organic molecules, raising the tantalizing possibility that Europa might contain the building blocks for life.</p>
-    
-    <p>The $4.5 billion mission will involve the spacecraft performing approximately 45 close flybys of Europa, coming as close as 16 miles to the moon's surface, while orbiting Jupiter to avoid the gas giant's intense radiation fields which could damage the spacecraft's electronics.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3",
-    category: "Science",
+    title: "This AI Startup Just Raised $100M to Revolutionize Healthcare!",
+    summary: "AI healthcare startup Akido Labs has secured a massive $100 million funding round to expand its AI-driven medical services. The company aims to provide on-demand healthcare for gig workers, including ride-share drivers, through its AI-powered virtual doctor. With investors betting big on AI in healthcare, could this be the future of accessible and affordable medical care?",
+    content: "Akido Labs, an AI-powered healthcare startup, has just raised $100 million in funding, marking a major step forward in the AI-driven medical industry. The company’s mission is to provide affordable and instant healthcare access to gig workers, including Uber and Lyft drivers, who often lack traditional health insurance. By leveraging artificial intelligence, Akido Labs has developed a virtual doctor that can diagnose conditions, recommend treatments, and connect patients with real medical professionals if necessary. The funding round was led by prominent venture capital firms, highlighting strong investor confidence in AI’s role in the future of healthcare. Akido Labs' platform uses advanced machine learning to analyze symptoms and medical histories, offering patients personalized treatment options in real time. The goal is to create a system where gig workers and other underserved populations can receive quality medical care without long wait times or high costs. This AI-driven approach aims to solve one of healthcare’s biggest challenges: accessibility. Traditional healthcare systems are often slow, expensive, and difficult to navigate, especially for independent contractors and part-time workers. By introducing AI-based virtual doctors, Akido Labs hopes to fill this gap by providing 24/7 healthcare services at a fraction of the cost of conventional medical visits. However, the rise of AI in healthcare raises questions about accuracy, ethics, and the role of human doctors. While AI can provide faster diagnoses, some experts worry that it might not fully replace the expertise of human physicians. There are also concerns about data privacy, as AI-driven healthcare relies heavily on patient data for personalized recommendations. Despite these challenges, Akido Labs' success signals a growing trend in AI-driven medical solutions. With its latest funding, the company plans to expand its services, improve its AI models, and potentially revolutionize how millions of gig workers access healthcare. Is AI the future of medicine, or should we be cautious about trusting artificial intelligence with our health? One thing is certain: investors and industry leaders are watching closely as AI continues to reshape healthcare.",
+    imageUrl: "https://images.wsj.net/im-84095909/social",
+    category: "AI Startup",
     author: "Elena Martinez",
     date: "2023-11-12",
     likes: 4285,
@@ -115,19 +83,11 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 5,
-    title: "Major Breakthrough in Quantum Computing Achieves Quantum Supremacy for Practical Applications",
-    summary: "IBM's new 1,000-qubit quantum computer solves complex problems impossible for traditional supercomputers.",
-    content: `<p>IBM has announced a significant breakthrough in quantum computing, unveiling a 1,000-qubit quantum processor that has demonstrated quantum supremacy for commercially relevant problems for the first time.</p>
-    
-    <p>The new quantum computer, named "Condor," successfully simulated complex chemical reactions for pharmaceutical research that would have taken conventional supercomputers thousands of years to solve. The calculations were completed in just 3.5 hours.</p>
-    
-    <p>"This marks the transition of quantum computing from a theoretical curiosity to a practical tool," said Dr. Dario Gil, IBM's Senior Vice President and Director of Research. "We've crossed a threshold where quantum computers can now solve problems that have real commercial and scientific value."</p>
-    
-    <p>The breakthrough hinges on IBM's new quantum error correction system, which significantly reduces the noise and errors that have plagued quantum computers and limited their practical applications. This improvement in error correction allows the quantum computer to perform longer and more complex calculations with sufficient accuracy for practical use.</p>
-    
-    <p>Several major pharmaceutical companies have already partnered with IBM to use the new system for drug discovery applications, potentially revolutionizing the development of new medications by dramatically accelerating the process of identifying and testing new molecular compounds.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3",
-    category: "Technology",
+    title: "AI-Generated Influencer Aitana López Sparks Debate in Fashion Industry",
+    summary: "Aitana López, an AI-created virtual influencer from Barcelona, has gained significant attention as Spain's 'hottest supermodel.' Developed by Clueless AI, Aitana's hyper-realistic features and engaging personality have attracted 350,000 followers and brand partnerships worth £1,000 per post. While some praise the innovation, others raise concerns about the impact on human models and the authenticity of digital influencers.",
+    content: "Aitana López, an AI-generated virtual influencer developed by Clueless AI in Barcelona, has rapidly become a prominent figure in the fashion and social media landscapes. With her strikingly realistic appearance and carefully crafted online persona, Aitana has amassed a following of 350,000 on various platforms. Her popularity has led to lucrative brand partnerships, with companies reportedly paying £1,000 per promotional post. The emergence of AI influencers like Aitana has sparked a mix of admiration and controversy. Proponents argue that virtual models offer brands a unique and innovative way to engage with audiences, providing consistency and control over brand image. Additionally, AI influencers can be available 24/7 and are not subject to the limitations and demands of human counterparts. However, critics express concerns about the potential displacement of human models and the ethical implications of promoting products through computer-generated personas. There is also apprehension about the authenticity and transparency of interactions between AI influencers and their followers. Diana Nunez, the creator behind Aitana and founder of Clueless AI, emphasizes that while AI models present new opportunities, they should complement rather than replace human talent in the fashion industry. Nunez envisions a future where virtual and human influencers coexist, each bringing unique value to the table. As AI technology continues to evolve, the presence of virtual influencers like Aitana López is likely to become more prevalent, prompting ongoing discussions about their role and impact in the digital age.",
+    imageUrl: "https://static.euronews.com/articles/stories/08/05/91/16/808x603_cmsv2_1ec54b54-4d0a-563e-92e3-bdc8dd66e915-8059116.jpg",
+    category: "AI in Social Media",
     author: "David Kumar",
     date: "2023-11-10",
     likes: 1892,
@@ -139,21 +99,13 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 6,
-    title: "New Study Reveals Unexpected Benefits of Intermittent Fasting",
-    summary: "Research shows time-restricted eating has profound effects beyond weight loss, including improved cell repair and longevity.",
-    content: `<p>A groundbreaking study published today in the Journal of Metabolic Research has revealed that intermittent fasting provides substantial health benefits beyond weight management, potentially affecting cellular repair mechanisms and longevity.</p>
-    
-    <p>The five-year study, conducted by researchers at Stanford University, tracked over 1,200 participants who followed various time-restricted eating protocols. The most significant results came from those following a 16:8 fasting schedule (16 hours of fasting, 8 hours of eating).</p>
-    
-    <p>"What surprised us most was the extent of cellular regeneration we observed," said Dr. Amelia Takashi, the study's lead author. "Participants showed significantly increased autophagy—the process by which cells clean out damaged components and regenerate themselves."</p>
-    
-    <p>Participants in the 16:8 group showed a 37% increase in autophagy markers compared to control groups, along with reduced inflammation markers, improved insulin sensitivity, and decreased oxidative stress—all factors associated with aging and chronic disease.</p>
-    
-    <p>The study also found cognitive benefits, with fasting participants scoring higher on memory and problem-solving tests, suggesting potential implications for neurodegenerative disease prevention.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1542848284-8afa78a08ccb?ixlib=rb-4.0.3",
-    category: "Health",
+    title: "AI 'Younger Self' Videos Go Viral on Social Media",
+    summary: "A new AI trend called 'Met Myself for Coffee' is taking social media by storm, allowing users to create videos where they interact with their younger selves. Powered by the AI platform Pika, this feature combines current videos with past photos to produce realistic interactions, sparking both fascination and ethical debates.",
+    content: "The 'Met Myself for Coffee' trend has recently gained immense popularity across various social media platforms. This innovative concept enables individuals to create videos in which they appear to meet and converse with their younger selves, offering a unique medium for self-reflection and storytelling. The technology behind this trend is developed by Pika, an AI-driven video platform. Pika's 'Selfie With Your Younger Self' feature seamlessly merges contemporary videos with historical photos or AI-generated childhood images to craft lifelike interactions. Users can upload a current video and a past photo, and the AI processes these inputs to generate a cohesive video depicting the user engaging with their younger version. The trend has seen participation from internet celebrities and everyday users alike, showcasing the tool's versatility and widespread appeal. Notably, individuals have utilized this feature to narrate personal growth stories, honor their heritage, or even create virtual reunions with deceased loved ones. While the technology offers creative and therapeutic possibilities, it also raises ethical considerations. Concerns about data privacy, the psychological impact of interacting with a digital younger self, and the potential for misuse in creating deceptive content are topics of ongoing discussion. As AI continues to advance, trends like 'Met Myself for Coffee' exemplify the profound ways in which technology can intersect with personal expression and social interaction.",
+    imageUrl: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2025-02/250214-coffee-self-tiktok-trend-jg-62c729.jpg",
+    category: "AI in Social Media",
     author: "James Wong",
-    date: "2023-11-08",
+    date: "2025-03-30",
     likes: 3411,
     comments: 452,
     saved: false,
@@ -163,21 +115,13 @@ export const newsData: NewsArticle[] = [
   },
   {
     id: 7,
-    title: "Archaeologists Discover 'Lost City' in Amazon Rainforest Using Advanced Lidar Technology",
-    summary: "Hidden urban complex reveals advanced civilization existed in the Amazon 2,000 years ago, challenging previous understanding.",
-    content: `<p>Archaeologists have discovered the remains of a vast urban settlement in a remote region of the Amazon rainforest, using cutting-edge lidar technology that penetrated the dense jungle canopy to reveal what experts are calling "one of the most significant archaeological finds of the century."</p>
-    
-    <p>The discovery, made by an international team led by researchers from the University of São Paulo and the French National Centre for Scientific Research, uncovered a sophisticated network of roads, canals, reservoirs, and plazas spanning over 50 square kilometers.</p>
-    
-    <p>"This completely rewrites our understanding of pre-Columbian Amazon civilizations," said Dr. Carlos Monteiro, the project's lead archaeologist. "The scale and complexity of this site indicate a society far more advanced than previously thought possible in this region."</p>
-    
-    <p>The settlement, estimated to have been built around 200 CE, could have supported a population of up to 100,000 people and includes evidence of advanced agricultural techniques, water management systems, and ceremonial structures aligned with astronomical events.</p>
-    
-    <p>Preliminary analysis of artifacts found at the site suggests extensive trade networks with distant regions, indicating the civilization was far from isolated. The discovery challenges long-held assumptions about the Amazon being a pristine wilderness only sparsely populated before European contact.</p>`,
-    imageUrl: "https://images.unsplash.com/photo-1513956301757-19debdb73d3e?ixlib=rb-4.0.3",
-    category: "Archaeology",
+    title: "Samsung's AI-Powered Vacuum Alerts Users to Calls and Texts",
+    summary: "Samsung has unveiled the Bespoke AI Jet Ultra, a cordless stick vacuum equipped with an LCD screen that notifies users of incoming phone calls and text messages. Priced at $1,099, this vacuum offers 400AW suction power and a 100-minute battery life, integrating smart home technology with household cleaning.",
+    content: "Samsung has introduced the Bespoke AI Jet Ultra, a cutting-edge cordless stick vacuum that merges advanced cleaning capabilities with smart home integration. This innovative appliance features an LCD display designed to alert users about incoming phone calls and text messages, ensuring that important communications are not missed during household chores. Beyond its smart notification system, the Bespoke AI Jet Ultra boasts impressive cleaning performance. It delivers 400AW of suction power, capable of tackling various cleaning tasks with ease. The vacuum also offers a substantial 100-minute battery life, allowing users to clean larger areas without frequent recharging. The integration of AI technology into household appliances reflects Samsung's commitment to enhancing user convenience and connectivity within the smart home ecosystem. By enabling the vacuum to sync with smartphones via the SmartThings app, users can receive real-time notifications directly on the vacuum's display. This feature is compatible with both Android and iOS devices, requiring a Samsung account for setup. While the Bespoke AI Jet Ultra represents a significant advancement in home appliance technology, it also raises considerations about the longevity and practicality of integrating screens into household devices. Users may ponder the potential for obsolescence, the risk of malfunctions, and the overall necessity of such features in everyday appliances. Nevertheless, Samsung's latest offering exemplifies the growing trend of incorporating AI and smart technology into home cleaning solutions, aiming to provide users with a more connected and efficient household experience.",
+    imageUrl: "https://img.global.news.samsung.com/ca/wp-content/uploads/2023/06/bespoke-jet_ai_kv_pc_notext.jpg",
+    category: "AI in Home Appliances",
     author: "Ana Ferreira",
-    date: "2023-11-05",
+    date: "2025-03-30",
     likes: 5126,
     comments: 324,
     saved: true,

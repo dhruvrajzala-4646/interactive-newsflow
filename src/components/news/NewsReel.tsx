@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Heart, MessageSquare, Share2, Bookmark, BookOpen, MessageCircle, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -91,14 +90,14 @@ const NewsReel = ({
   }, [article.id, showSummary]);
 
   return (
-    <div className="news-reel h-screen w-full relative snap-center reel-item will-change-transform" {...handlers}>
+    <div className="news-reel min-h-screen w-full relative snap-center reel-item will-change-transform" {...handlers}>
       <img
         src={article.imageUrl}
         alt={article.title}
         className="w-full h-full object-cover absolute inset-0 will-change-transform"
         loading="eager"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
       
       {/* Action Buttons - Repositioned to top right */}
       <div className="action-buttons">
@@ -157,17 +156,12 @@ const NewsReel = ({
           <div className="text-sm font-medium bg-[#0077B6]/80 text-white backdrop-blur-sm rounded-full px-3 py-1 inline-block mb-2">
             {article.category}
           </div>
-          <h1 className="text-2xl md:text-4xl font-bold text-white mb-3">
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-3" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
             {article.title}
           </h1>
-          <div
-            className={cn(
-              "text-white/90 text-base md:text-lg transition-opacity duration-500",
-              showSummary ? "opacity-100 animate-fade-in" : "opacity-0"
-            )}
-          >
+          <p className="text-white/80 text-base md:text-lg mb-3" style={{ textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)' }}>
             {article.summary}
-          </div>
+          </p>
         </div>
         
         <div className="flex justify-between items-center mb-16 animate-fade-in">

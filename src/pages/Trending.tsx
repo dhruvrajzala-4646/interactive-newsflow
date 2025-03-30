@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { newsData, NewsArticle } from "@/data/newsData";

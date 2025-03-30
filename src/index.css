@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -217,11 +216,9 @@
   .reel-item {
     height: 100vh;
     width: 100%;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
     position: relative;
-    will-change: transform;
-    overflow: hidden; /* Ensure content doesn't overflow */
+    overflow: hidden;
+    will-change: transform, opacity;
   }
   
   /* Updated action buttons styling - positioned at top right */

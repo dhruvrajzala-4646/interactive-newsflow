@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { Home, TrendingUp, Bookmark, User } from "lucide-react";
 
