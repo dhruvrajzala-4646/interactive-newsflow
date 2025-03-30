@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft, Heart, MessageSquare, Share2, Bookmark, Headphones, ChevronRight, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Heart, MessageSquare, Share2, Bookmark, Headphones, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NewsArticle } from "@/data/newsData";
 import { cn } from "@/lib/utils";
@@ -55,10 +55,10 @@ const FullArticle = ({
         isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
-      <div className="sticky top-0 bg-background/80 backdrop-blur-sm border-b border-border z-10">
-        <div className="flex justify-between items-center p-4">
-          <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-background/20">
-            <ArrowLeft size={24} />
+      <div className="sticky top-0 bg-background/80 backdrop-blur-lg border-b border-border z-10 py-2">
+        <div className="flex justify-between items-center p-4 container max-w-4xl mx-auto">
+          <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-background/20 rounded-full">
+            <ArrowLeft size={20} />
           </Button>
           
           <div className="flex gap-2">
@@ -66,40 +66,40 @@ const FullArticle = ({
               variant="ghost"
               size="icon"
               onClick={() => article && onLike(article.id)}
-              className="hover:bg-background/20"
+              className="hover:bg-background/20 rounded-full"
               aria-label="Like"
             >
-              <Heart size={20} className={article.liked ? "fill-primary text-primary" : ""} />
+              <Heart size={18} className={article.liked ? "fill-primary text-primary" : ""} />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
               onClick={() => article && onComment(article.id)}
-              className="hover:bg-background/20"
+              className="hover:bg-background/20 rounded-full"
               aria-label="Comment"
             >
-              <MessageSquare size={20} />
+              <MessageSquare size={18} />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
               onClick={() => article && onShare(article.id)}
-              className="hover:bg-background/20"
+              className="hover:bg-background/20 rounded-full"
               aria-label="Share"
             >
-              <Share2 size={20} />
+              <Share2 size={18} />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
               onClick={() => article && onSave(article.id)}
-              className="hover:bg-background/20"
+              className="hover:bg-background/20 rounded-full"
               aria-label="Save"
             >
-              <Bookmark size={20} className={article.saved ? "fill-primary text-primary" : ""} />
+              <Bookmark size={18} className={article.saved ? "fill-primary text-primary" : ""} />
             </Button>
             
             {onListen && (
@@ -107,10 +107,10 @@ const FullArticle = ({
                 variant="ghost"
                 size="icon"
                 onClick={() => article && onListen(article)}
-                className="hover:bg-background/20"
+                className="hover:bg-background/20 rounded-full"
                 aria-label="Listen"
               >
-                <Headphones size={20} />
+                <Headphones size={18} />
               </Button>
             )}
           </div>
@@ -119,32 +119,49 @@ const FullArticle = ({
       
       <ScrollArea className="h-[calc(100vh-60px)]">
         <div className="container mx-auto max-w-4xl p-4 md:p-6 animate-fade-in">
-          <div className="mb-6 text-center animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
+          <div className="mb-8 text-center animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
             <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 inline-block mb-2">
               {article.category}
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {article.title}
             </h1>
-            <div className="text-muted-foreground text-sm mb-3">
-              By {article.author} • {article.date} • {article.likes} likes • {article.comments || 0} comments
+            <div className="text-muted-foreground text-sm mb-3 flex items-center justify-center gap-2">
+              <span>By {article.author}</span>
+              <span>•</span>
+              <span>{article.date}</span>
+              <span>•</span>
+              <div className="flex items-center gap-1">
+                <Heart size={14} className={article.liked ? "fill-primary text-primary" : ""} />
+                <span>{article.likes}</span>
+              </div>
+              <span>•</span>
+              <div className="flex items-center gap-1">
+                <MessageSquare size={14} />
+                <span>{article.comments || 0}</span>
+              </div>
             </div>
             
             {/* Smart Summary Section */}
-            <div className="bg-muted/30 rounded-lg p-4 mb-6 mx-auto max-w-2xl border border-border">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold text-lg">Smart Summary</h3>
-                <Tabs defaultValue="casual" value={summaryTone} onValueChange={(v) => setSummaryTone(v as any)}>
-                  <TabsList className="bg-muted/60">
-                    <TabsTrigger value="casual" className="text-xs">Casual</TabsTrigger>
-                    <TabsTrigger value="formal" className="text-xs">Formal</TabsTrigger>
-                    <TabsTrigger value="fun" className="text-xs">Fun</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+            <div className="bg-muted/30 rounded-lg p-4 mb-8 mx-auto max-w-2xl border border-border flex items-start gap-3">
+              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0 mt-1">
+                <Sparkles size={18} className="text-primary" />
               </div>
-              <p className="text-muted-foreground transition-all duration-300">
-                {getSummaryByTone()}
-              </p>
+              <div className="flex-1 text-left">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold text-lg">Smart Summary</h3>
+                  <Tabs defaultValue="casual" value={summaryTone} onValueChange={(v) => setSummaryTone(v as any)}>
+                    <TabsList className="bg-muted/60 h-8">
+                      <TabsTrigger value="casual" className="text-xs h-6">Casual</TabsTrigger>
+                      <TabsTrigger value="formal" className="text-xs h-6">Formal</TabsTrigger>
+                      <TabsTrigger value="fun" className="text-xs h-6">Fun</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
+                <p className="text-muted-foreground transition-all duration-300">
+                  {getSummaryByTone()}
+                </p>
+              </div>
             </div>
           </div>
           

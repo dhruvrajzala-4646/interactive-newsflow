@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight, ArrowLeft, MessageCircle, Headphones } from "lucide-react";
+import { Heart, MessageSquare, Share2, Bookmark, ChevronLeft, ChevronRight, BookOpen, MessageCircle, Headphones, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NewsArticle } from "@/data/newsData";
@@ -85,37 +85,47 @@ const NewsReel = ({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       
-      <div className="action-buttons absolute left-4 top-1/2 space-y-4 z-30">
+      {/* Action Buttons - Permanently visible */}
+      <div className="fixed-action-buttons absolute left-4 top-1/2 transform -translate-y-1/2 space-y-4 z-30">
         <Button 
           onClick={() => onSwipeLeft(article)}
-          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+          className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+          aria-label="Read Full Article"
         >
-          <ArrowLeft size={18} className="text-white group-hover:scale-110 transition-transform" />
+          <BookOpen size={18} />
+          <span className="text-sm font-medium">Read Article</span>
         </Button>
         
         <Button
           onClick={() => onSwipeRight()}
-          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+          className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+          aria-label="Ask AI"
         >
-          <MessageCircle size={18} className="text-white group-hover:scale-110 transition-transform" />
+          <MessageCircle size={18} />
+          <span className="text-sm font-medium">Ask AI</span>
         </Button>
         
         {onListen && (
           <Button
             onClick={() => onListen(article)}
-            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 group"
+            className="action-button flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full px-4 py-6 transition-all duration-300"
+            aria-label="Listen to Article"
           >
-            <Headphones size={18} className="text-white group-hover:scale-110 transition-transform" />
+            <Headphones size={18} />
+            <span className="text-sm font-medium">Listen</span>
           </Button>
         )}
       </div>
       
-      <div className="swipe-indicator swipe-left absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100">
-        <ChevronLeft size={24} className="text-white" />
+      {/* Swipe Indicators */}
+      <div className="swipe-indicator swipe-left absolute left-4 bottom-20 transform bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 flex items-center gap-2">
+        <ChevronLeft size={20} className="text-white" />
+        <span className="text-white text-xs">Read Full Article</span>
       </div>
       
-      <div className="swipe-indicator swipe-right absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100">
-        <ChevronRight size={24} className="text-white" />
+      <div className="swipe-indicator swipe-right absolute right-4 bottom-20 transform bg-white/20 backdrop-blur-sm p-2 rounded-full transition-opacity opacity-70 hover:opacity-100 flex items-center gap-2">
+        <span className="text-white text-xs">Ask AI</span>
+        <ChevronRight size={20} className="text-white" />
       </div>
       
       {showSmartSummary && (

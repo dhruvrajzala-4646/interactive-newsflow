@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { newsData, NewsArticle } from "@/data/newsData";
 import TopNav from "@/components/navigation/TopNav";
@@ -20,29 +20,55 @@ const Trending = () => {
   const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(false);
   const [playingArticle, setPlayingArticle] = useState<NewsArticle | null>(null);
   
-  // Additional sections
-  const featuredArticles = articles
-    .filter(article => article.featured)
-    .sort((a, b) => b.likes - a.likes); // Sort by likes
+  // Memoize article sections to prevent unnecessary re-renders
+  const featuredArticles = useMemo(() => 
+    articles
+      .filter(article => article.featured)
+      .sort((a, b) => b.likes - a.likes), 
+    [articles]
+  );
     
-  const trendingArticles = articles
-    .filter(article => article.trending && !article.featured)
-    .sort((a, b) => b.likes - a.likes) // Sort by likes
-    .slice(0, 4);
+  const trendingArticles = useMemo(() => 
+    articles
+      .filter(article => article.trending && !article.featured)
+      .sort((a, b) => b.likes - a.likes)
+      .slice(0, 4),
+    [articles]
+  );
   
   // Latest blogs - sort by date
-  const latestBlogs = [...articles]
-    .sort((a, b) => {
-      const dateA = new Date(a.date.split(" ")[0]);
-      const dateB = new Date(b.date.split(" ")[0]);
-      return dateB.getTime() - dateA.getTime();
-    })
-    .slice(0, 3);
+  const latestBlogs = useMemo(() => 
+    [...articles]
+      .sort((a, b) => {
+        const dateA = new Date(a.date.split(" ")[0]);
+        const dateB = new Date(b.date.split(" ")[0]);
+        return dateB.getTime() - dateA.getTime();
+      })
+      .slice(0, 3),
+    [articles]
+  );
   
   // Most liked blogs
-  const mostLikedBlogs = [...articles]
-    .sort((a, b) => b.likes - a.likes)
-    .slice(0, 3);
+  const mostLikedBlogs = useMemo(() => 
+    [...articles]
+      .sort((a, b) => b.likes - a.likes)
+      .slice(0, 3),
+    [articles]
+  );
+
+  // Get related articles for the current selected article
+  const relatedArticles = useMemo(() => 
+    selectedArticle
+      ? articles
+          .filter(
+            (article) =>
+              article.id !== selectedArticle.id &&
+              article.category === selectedArticle.category
+          )
+          .slice(0, 4)
+      : [],
+    [selectedArticle, articles]
+  );
 
   const handleLike = useCallback((id: number) => {
     setArticles((prevArticles) =>
@@ -127,16 +153,28 @@ const Trending = () => {
     setAudioPlayerMinimized(false);
   }, []);
 
-  // Get related articles for the current selected article
-  const relatedArticles = selectedArticle
-    ? articles
-        .filter(
-          (article) =>
-            article.id !== selectedArticle.id &&
-            article.category === selectedArticle.category
-        )
-        .slice(0, 4)
-    : [];
+  // Use IntersectionObserver for lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.lazy-load').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen pb-20 bg-background">
@@ -147,11 +185,11 @@ const Trending = () => {
         <NewsTicker />
       </div>
       
-      <div className="container py-6 animate-fade-in">
+      <div className="container py-6">
         <h1 className="text-2xl font-bold mb-6">Trending News</h1>
         
         {/* Featured Stories Section */}
-        <div className="mb-10">
+        <section className="mb-10 lazy-load opacity-0">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Featured Stories</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -166,7 +204,7 @@ const Trending = () => {
                   <img
                     src={article.imageUrl}
                     alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
                     <div className="flex items-center gap-2 mb-2">
@@ -221,15 +259,15 @@ const Trending = () => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
         
         {/* Trending Topics Section */}
-        <div className="mb-10">
+        <section className="mb-10 lazy-load opacity-0">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Trending Topics</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {trendingArticles.map((article, index) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={article.id} className="hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
@@ -243,15 +281,15 @@ const Trending = () => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
         
         {/* Most Liked Blogs Section */}
-        <div className="mb-10">
+        <section className="mb-10 lazy-load opacity-0">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Most Liked Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {mostLikedBlogs.map((article, index) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={article.id} className="hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
@@ -265,15 +303,15 @@ const Trending = () => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
         
         {/* Latest Blogs Section */}
-        <div className="mb-10">
+        <section className="mb-10 lazy-load opacity-0">
           <h2 className="text-xl font-semibold mb-4 border-l-4 border-primary pl-3">Latest Blogs</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {latestBlogs.map((article, index) => (
-              <div key={article.id} className="animate-fade-in hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={article.id} className="hover-scale" style={{animationDelay: `${index * 0.1}s`}}>
                 <NewsCard
                   article={article}
                   size="medium"
@@ -287,7 +325,7 @@ const Trending = () => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
       
       {/* Fullscreen Article */}
